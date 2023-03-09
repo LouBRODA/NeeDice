@@ -26,26 +26,26 @@
         app:layout_constraintTop_toBottomOf="@id/imageView">
 
         <Button
-            android:id="@+id/playButton"
+            android:id="@+id/play_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:layout_weight="1"
             android:background="@drawable/menu_button"
             android:drawablePadding="8dp"
-            android:text="Play"
+            android:text="@string/play_maj"
             android:textColor="@android:color/white"
             android:textSize="16sp"/>
 
         <Button
-            android:id="@+id/settingsButton"
+            android:id="@+id/settings_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:layout_weight="1"
             android:background="@drawable/menu_button"
             android:drawablePadding="8dp"
-            android:text="Settings"
+            android:text="@string/settings_maj"
             android:textColor="@android:color/white"
             android:textSize="16sp" />
 

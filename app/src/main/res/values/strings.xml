@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">NeeDice</string>
+    <string name="play_maj">PLAY</string>
+    <string name="settings_maj">SETTINGS</string>
 </resources>
