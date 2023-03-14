@@ -1,3 +1,3 @@
-package com.example.needice.model
+package but.app.needice.model
 
 data class Color (val id : String, val name : String){}

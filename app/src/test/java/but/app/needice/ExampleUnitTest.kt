@@ -1,4 +1,4 @@
-package com.example.needice
+package but.app.needice
 
 import org.junit.Test
 

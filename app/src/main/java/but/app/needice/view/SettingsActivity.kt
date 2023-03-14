@@ -1,11 +1,8 @@
-package com.example.needice.view
+package but.app.needice.view
 
 import android.os.Bundle
-import android.widget.Button
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import kotlin.random.Random
-import com.example.needice.R
+import but.app.needice.R
 
 class SettingsActivity : AppCompatActivity() {
 

@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.needice'
+    namespace 'but.app.needice'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.needice"
+        applicationId "but.app.needice"
         minSdk 16
         targetSdk 33
         versionCode 1

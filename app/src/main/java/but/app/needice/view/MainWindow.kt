@@ -1,4 +1,4 @@
-package com.example.needice.view
+package but.app.needice.view
 
 import android.os.Bundle
 import android.widget.Button
@@ -6,9 +6,9 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.needice.R
-import com.example.needice.adaptor.ColorPalletAdaptor
-import com.example.needice.model.Color
+import but.app.needice.R
+import but.app.needice.adaptor.ColorPalletAdaptor
+import but.app.needice.model.Color
 import kotlin.random.Random
 
 class MainWindow : AppCompatActivity() {

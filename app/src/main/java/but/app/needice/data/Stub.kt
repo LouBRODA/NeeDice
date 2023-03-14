@@ -1,11 +1,11 @@
-package com.example.needice.data
+package but.app.needice.data
 
-import com.example.needice.model.Color
-import com.example.needice.model.ColorPallet
+import but.app.needice.model.Color
+import but.app.needice.model.ColorPallet
 
 class Stub {
 
-    fun load(): ColorPallet{
+    fun load(): ColorPallet {
         val dataColor = ColorPallet()
 
         dataColor.addColor(Color("#ffffff", "white"))

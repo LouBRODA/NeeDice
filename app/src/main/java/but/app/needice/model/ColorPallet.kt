@@ -1,4 +1,4 @@
-package com.example.needice.model
+package but.app.needice.model
 
 class ColorPallet {
 

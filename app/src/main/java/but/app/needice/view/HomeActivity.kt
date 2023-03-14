@@ -1,11 +1,11 @@
-package com.example.needice.view
+package but.app.needice.view
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import com.example.needice.R
-import com.example.needice.data.Stub
+import but.app.needice.R
+import but.app.needice.data.Stub
 
 class HomeActivity : AppCompatActivity() {
 

@@ -1,12 +1,12 @@
-package com.example.needice.adaptor
+package but.app.needice.adaptor
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.needice.R
-import com.example.needice.model.Color
-import com.example.needice.view.holder.ColorPalletViewHolder
+import but.app.needice.R
+import but.app.needice.model.Color
+import but.app.needice.view.holder.ColorPalletViewHolder
 
 class ColorPalletAdaptor(private val listColor : ArrayList<Color>) : RecyclerView.Adapter<ColorPalletViewHolder>(){
 
