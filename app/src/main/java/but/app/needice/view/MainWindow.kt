@@ -1,6 +1,8 @@
 package but.app.needice.view
 
 import android.os.Bundle
+import android.view.View
+import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -10,6 +12,7 @@ import but.app.needice.R
 import but.app.needice.adaptor.ColorPalletAdaptor
 import but.app.needice.model.Color
 import kotlin.random.Random
+
 
 class MainWindow : AppCompatActivity() {
 
@@ -35,8 +38,11 @@ class MainWindow : AppCompatActivity() {
             val de = 1 + rd.nextInt(7 - 1)
             text.text = de.toString()
             print(text)
+
+            val form : View = findViewById(R.id.dice_form);
+            val animation = AnimationUtils.loadAnimation(this, R.anim.dice_animation)
+            form.startAnimation(animation)
         }
-        setContentView(R.layout.play_screen)
     }
 
 }
