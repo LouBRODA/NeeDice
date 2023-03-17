@@ -8,7 +8,12 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Bundle
 import android.os.Handler
+import android.service.autofill.OnClickAction
+import android.speech.tts.TextToSpeech
+import android.speech.tts.TextToSpeech.OnInitListener
+import android.util.Log
 import android.view.View
+import android.view.View.OnClickListener
 import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.TextView
@@ -18,12 +23,15 @@ import androidx.recyclerview.widget.RecyclerView
 import but.app.needice.R
 import but.app.needice.adaptor.ColorPalletAdaptor
 import but.app.needice.model.Color
+import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.random.Random
 
-
 @Suppress("DEPRECATION")
-class MainWindow : AppCompatActivity() {
+class MainWindow : AppCompatActivity(), TextToSpeech.OnInitListener {
 
+    private var listen : TextToSpeech? = null
+    private lateinit var roll : Button
     private lateinit var sensorManager: SensorManager
     private lateinit var sensor: Sensor
     private lateinit var textX: TextView
@@ -42,6 +50,25 @@ class MainWindow : AppCompatActivity() {
         textY = findViewById(R.id.texty)
         textZ = findViewById(R.id.textz)
 
+        //roll = findViewById(R.id.roll_button)
+        listen = TextToSpeech(this, this)
+        rollDice()
+    }
+
+    override fun onInit(state: Int) {
+        if (state == TextToSpeech.SUCCESS) {
+            val result = listen!!.setLanguage(Locale.FRENCH)
+
+            /*if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                Log.e("TextToSpeak","ERR : Language not supported !")
+            }else{
+                roll.isEnabled = false
+            }*/
+        }
+    }
+
+    private fun speakOut(text : String) {
+        listen!!.speak(text, TextToSpeech.QUEUE_FLUSH, null)
     }
 
     override fun onResume() {
@@ -69,23 +96,24 @@ class MainWindow : AppCompatActivity() {
         val form : View = findViewById(R.id.dice_form)
         val animation = AnimationUtils.loadAnimation(this, R.anim.dice_animation)
         form.startAnimation(animation)
+        speakOut(text.text.toString())
 
         Handler().postDelayed({             //Thread permettant de relancer le dé uniquement 1 fois par seconde
             canRoll = true
-        }, 1000)
+        }, 5000)
     }
 
 
     private fun checkValue(x : Float,y : Float,z : Float){
-        if(x >=10.0 || x<=-10 || y>=20 || y<=0 || z<=-0 || z>=10){       //x.pow(2) --------> A regarder pour systeme plus propre //sensibilité moyenne
+        if(x >=20.0 || x<=-20 || y>=20 || y<=10 || z<=-20 || z>=20){       //x.pow(2) --------> A regarder pour systeme plus propre //sensibilité moyenne
             canRoll = false
             rollDice()
         }
-        else{
+        else {
             canRoll = true
         }
-    }
 
+    }
 
     @SuppressLint("SetTextI18n")        //Norme pour le text (comme UTF8)
     private var accelListener: SensorEventListener = object : SensorEventListener {
