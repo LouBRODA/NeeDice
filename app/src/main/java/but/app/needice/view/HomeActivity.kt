@@ -30,5 +30,4 @@ class HomeActivity : AppCompatActivity() {
             startActivity(settingsIntent)
         }
     }
-
 }
