@@ -1,5 +1,6 @@
 package but.app.needice.view
 
+import android.animation.AnimatorInflater
 import android.annotation.SuppressLint
 import android.content.Context
 import android.hardware.Sensor
@@ -14,7 +15,6 @@ import android.speech.tts.TextToSpeech.OnInitListener
 import android.util.Log
 import android.view.View
 import android.view.View.OnClickListener
-import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -94,8 +94,9 @@ class MainWindow : AppCompatActivity(), TextToSpeech.OnInitListener {
         text.text = de.toString()
 
         val form : View = findViewById(R.id.dice_form)
-        val animation = AnimationUtils.loadAnimation(this, R.anim.dice_animation)
-        form.startAnimation(animation)
+        val animator = AnimatorInflater.loadAnimator(this, R.animator.dice_animator)
+        animator.setTarget(form)
+        animator.start()
         speakOut(text.text.toString())
 
         Handler().postDelayed({             //Thread permettant de relancer le dé uniquement 1 fois par seconde
