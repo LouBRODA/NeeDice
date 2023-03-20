@@ -30,7 +30,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="but.app.needice.view.MainWindow"
+        <activity android:name="but.app.needice.view.MainActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             android:exported="true">
             <intent-filter>

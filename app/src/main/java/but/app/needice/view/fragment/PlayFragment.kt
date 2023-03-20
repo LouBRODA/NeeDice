@@ -1,4 +1,5 @@
-package but.app.needice.view
+/*
+package but.app.needice.view.fragment
 
 import android.animation.AnimatorInflater
 import android.annotation.SuppressLint
@@ -9,15 +10,12 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Bundle
 import android.os.Handler
-import android.service.autofill.OnClickAction
 import android.speech.tts.TextToSpeech
-import android.speech.tts.TextToSpeech.OnInitListener
-import android.util.Log
 import android.view.View
-import android.view.View.OnClickListener
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import but.app.needice.R
@@ -28,7 +26,7 @@ import kotlin.collections.ArrayList
 import kotlin.random.Random
 
 @Suppress("DEPRECATION")
-class MainWindow : AppCompatActivity(), TextToSpeech.OnInitListener {
+class MainActivity : Fragment(), TextToSpeech.OnInitListener {
 
     private var listen : TextToSpeech? = null
     private lateinit var roll : Button
@@ -104,7 +102,6 @@ class MainWindow : AppCompatActivity(), TextToSpeech.OnInitListener {
         }, 5000)
     }
 
-
     private fun checkValue(x : Float,y : Float,z : Float){
         if(x >=20.0 || x<=-20 || y>=20 || y<=10 || z<=-20 || z>=20){       //x.pow(2) --------> A regarder pour systeme plus propre //sensibilité moyenne
             canRoll = false
@@ -133,3 +130,4 @@ class MainWindow : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
     }
 }
+*/
