@@ -42,7 +42,7 @@ class MainWindow : AppCompatActivity(), TextToSpeech.OnInitListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.play_screen)
-        print("TEST")
+
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
 
@@ -50,9 +50,7 @@ class MainWindow : AppCompatActivity(), TextToSpeech.OnInitListener {
         textY = findViewById(R.id.texty)
         textZ = findViewById(R.id.textz)
 
-        //roll = findViewById(R.id.roll_button)
         listen = TextToSpeech(this, this)
-        rollDice()
     }
 
     override fun onInit(state: Int) {
@@ -101,12 +99,12 @@ class MainWindow : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         Handler().postDelayed({             //Thread permettant de relancer le dé uniquement 1 fois par seconde
             canRoll = true
-        }, 5000)
+        }, 2000)
     }
 
 
     private fun checkValue(x : Float,y : Float,z : Float){
-        if(x >=20.0 || x<=-20 || y>=20 || y<=10 || z<=-20 || z>=20){       //x.pow(2) --------> A regarder pour systeme plus propre //sensibilité moyenne
+        if(x >=20.0 || x<=-20|| y>=20 || y<=-10 || z<=-20 || z>=20){       //x.pow(2) --------> A regarder pour systeme plus propre //sensibilité moyenne
             canRoll = false
             rollDice()
         }
