@@ -1,5 +1,4 @@
-/*
-package but.app.needice.view.fragment
+package but.app.needice.view
 
 import android.animation.AnimatorInflater
 import android.annotation.SuppressLint
@@ -11,10 +10,11 @@ import android.hardware.SensorManager
 import android.os.Bundle
 import android.os.Handler
 import android.speech.tts.TextToSpeech
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -26,7 +26,7 @@ import kotlin.collections.ArrayList
 import kotlin.random.Random
 
 @Suppress("DEPRECATION")
-class MainActivity : Fragment(), TextToSpeech.OnInitListener {
+class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
 
     private var listen : TextToSpeech? = null
     private lateinit var roll : Button
@@ -37,20 +37,21 @@ class MainActivity : Fragment(), TextToSpeech.OnInitListener {
     private lateinit var textZ: TextView
     private var canRoll: Boolean = true             //Permet de ne pas appeler le dé à l'infini
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.play_screen)
-        print("TEST")
-        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view = inflater.inflate(R.layout.play_screen, container, false)
+
+        sensorManager = context?.getSystemService(Context.SENSOR_SERVICE) as SensorManager
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
 
-        textX = findViewById(R.id.textx)
-        textY = findViewById(R.id.texty)
-        textZ = findViewById(R.id.textz)
+        textX = view.findViewById(R.id.textx)
+        textY = view.findViewById(R.id.texty)
+        textZ = view.findViewById(R.id.textz)
 
-        //roll = findViewById(R.id.roll_button)
-        listen = TextToSpeech(this, this)
+        //roll = view.findViewById(R.id.roll_button)
+        listen = TextToSpeech(context, this)
         rollDice()
+
+        return view
     }
 
     override fun onInit(state: Int) {
@@ -58,7 +59,7 @@ class MainActivity : Fragment(), TextToSpeech.OnInitListener {
             val result = listen!!.setLanguage(Locale.FRENCH)
 
             /*if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                Log.e("TextToSpeak","ERR : Language not supported !")
+                Log.e("TextToSpeak
             }else{
                 roll.isEnabled = false
             }*/
@@ -71,9 +72,9 @@ class MainActivity : Fragment(), TextToSpeech.OnInitListener {
 
     override fun onResume() {
         super.onResume()
-        val recyclerView = findViewById<RecyclerView>(R.id.list_color_display)
-        recyclerView.adapter = ColorPalletAdaptor(ArrayList<Color>())
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        val recyclerView = view?.findViewById<RecyclerView>(R.id.list_color_display)
+        recyclerView?.adapter = ColorPalletAdaptor(ArrayList<Color>())
+        recyclerView?.layoutManager = LinearLayoutManager(this.context)
 
         sensorManager.registerListener(accelListener, sensor,               //Add notre capteur à la liste des capteurs "vivant" du sensorManager, permet donc l'écoute sur ce capteur
             SensorManager.SENSOR_DELAY_NORMAL)
@@ -85,17 +86,17 @@ class MainActivity : Fragment(), TextToSpeech.OnInitListener {
     }
 
     private fun rollDice(){
-        val text : TextView = findViewById(R.id.number)
+        val text: TextView? = view?.findViewById(R.id.number)
         val rd : Random = Random
 
         val de = 1 + rd.nextInt(7 - 1)
-        text.text = de.toString()
+        text?.text = de.toString()
 
-        val form : View = findViewById(R.id.dice_form)
-        val animator = AnimatorInflater.loadAnimator(this, R.animator.dice_animator)
+        val form : View? = view?.findViewById(R.id.dice_form)
+        val animator = AnimatorInflater.loadAnimator(this.context, R.animator.dice_animator)
         animator.setTarget(form)
         animator.start()
-        speakOut(text.text.toString())
+        speakOut(text?.text.toString())
 
         Handler().postDelayed({             //Thread permettant de relancer le dé uniquement 1 fois par seconde
             canRoll = true
@@ -130,4 +131,3 @@ class MainActivity : Fragment(), TextToSpeech.OnInitListener {
         }
     }
 }
-*/
