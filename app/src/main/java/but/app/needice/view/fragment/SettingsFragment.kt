@@ -10,7 +10,7 @@ class SettingsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.findViewById<FragmentContainerView>(R.id.homeFragment)
+        view.findViewById<FragmentContainerView>(R.id.settingsFragment)
     }
 
 

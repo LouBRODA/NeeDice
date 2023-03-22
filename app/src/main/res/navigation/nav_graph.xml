@@ -6,16 +6,24 @@
     app:startDestination="@id/homeFragment">
 
     <fragment
+        android:id="@+id/settingsFragment"
+        android:name="but.app.needice.view.fragment.SettingsFragment"
+        android:label="settingsFragment" />
+    <fragment
+        android:id="@+id/playFragment"
+        android:name="but.app.needice.view.PlayFragment"
+        android:label="playFragment" />
+    <fragment
         android:id="@+id/homeFragment"
-        android:name="but.app.needice.HomeFragment"
-        android:label="home_fragment"
-        tools:layout="@layout/home_fragment" >
+        android:name="but.app.needice.view.fragment.HomeFragment"
+        android:label="homeFragment"
+        tools:layout="@layout/home_screen" >
         <action
             android:id="@+id/action_homeFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_playFragment"
+            app:destination="@id/playFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/settingsFragment"
-        android:name="but.app.needice.view.fragment.SettingsFragment"
-        android:label="SettingsFragment" />
+
 </navigation>

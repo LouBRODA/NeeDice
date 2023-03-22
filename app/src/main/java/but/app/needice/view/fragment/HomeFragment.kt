@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.Button
 import androidx.fragment.app.FragmentContainerView
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import but.app.needice.R
 import but.app.needice.data.Stub
 
@@ -23,6 +24,10 @@ class HomeFragment : Fragment() {
 
         playButton = view.findViewById<Button>(R.id.play_button)
         settingsButton = view.findViewById<Button>(R.id.settings_button)
+
+        playButton.setOnClickListener{
+            findNavController().navigate(R.id.action_homeFragment_to_playFragment)
+        }
 
         settingsButton.setOnClickListener {
             Navigation.findNavController(view).navigate(R.id.action_homeFragment_to_settingsFragment)
