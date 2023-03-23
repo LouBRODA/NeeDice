@@ -30,7 +30,7 @@ class HomeFragment : Fragment() {
         }
 
         settingsButton.setOnClickListener {
-            Navigation.findNavController(view).navigate(R.id.action_homeFragment_to_settingsFragment)
+            findNavController().navigate(R.id.action_homeFragment_to_settingsFragment)
         }
 
     }
