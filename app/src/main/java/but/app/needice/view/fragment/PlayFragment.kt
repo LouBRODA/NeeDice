@@ -13,6 +13,7 @@ import android.speech.tts.TextToSpeech
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -36,6 +37,15 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
     private lateinit var textY: TextView
     private lateinit var textZ: TextView
     private var canRoll: Boolean = true             //Permet de ne pas appeler le dé à l'infini
+
+    private val languages = listOf(
+        Pair("English", "en"),
+        Pair("French", "fr"),
+        Pair("Spanish", "es")
+    )
+
+    //private val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, languages.map { it.first })
+    //spinner.adapter = adapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.play_screen, container, false)
