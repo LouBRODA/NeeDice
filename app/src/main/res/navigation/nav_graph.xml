@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="but.app.needice.view.fragment.SettingsFragment"
+        android:label="settingsFragment" />
+    <fragment
+        android:id="@+id/playFragment"
+        android:name="but.app.needice.view.PlayFragment"
+        android:label="playFragment" />
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="but.app.needice.view.fragment.HomeFragment"
+        android:label="homeFragment"
+        tools:layout="@layout/home_screen" >
+        <action
+            android:id="@+id/action_homeFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_playFragment"
+            app:destination="@id/playFragment" />
+    </fragment>
+
+</navigation>

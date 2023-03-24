@@ -9,15 +9,14 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Bundle
 import android.os.Handler
-import android.service.autofill.OnClickAction
 import android.speech.tts.TextToSpeech
-import android.speech.tts.TextToSpeech.OnInitListener
-import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnClickListener
+import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import but.app.needice.R
@@ -28,7 +27,7 @@ import kotlin.collections.ArrayList
 import kotlin.random.Random
 
 @Suppress("DEPRECATION")
-class MainWindow : AppCompatActivity(), TextToSpeech.OnInitListener {
+class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
 
     private var listen : TextToSpeech? = null
     private lateinit var roll : Button
@@ -39,18 +38,30 @@ class MainWindow : AppCompatActivity(), TextToSpeech.OnInitListener {
     private lateinit var textZ: TextView
     private var canRoll: Boolean = true             //Permet de ne pas appeler le dé à l'infini
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.play_screen)
+    private val languages = listOf(
+        Pair("English", "en"),
+        Pair("French", "fr"),
+        Pair("Spanish", "es")
+    )
 
-        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+    //private val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, languages.map { it.first })
+    //spinner.adapter = adapter
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view = inflater.inflate(R.layout.play_screen, container, false)
+
+        sensorManager = context?.getSystemService(Context.SENSOR_SERVICE) as SensorManager
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
 
-        textX = findViewById(R.id.textx)
-        textY = findViewById(R.id.texty)
-        textZ = findViewById(R.id.textz)
+        textX = view.findViewById(R.id.textx)
+        textY = view.findViewById(R.id.texty)
+        textZ = view.findViewById(R.id.textz)
 
-        listen = TextToSpeech(this, this)
+        //roll = view.findViewById(R.id.roll_button)
+        listen = TextToSpeech(context, this)
+        rollDice()
+
+        return view
     }
 
     override fun onInit(state: Int) {
@@ -58,7 +69,7 @@ class MainWindow : AppCompatActivity(), TextToSpeech.OnInitListener {
             val result = listen!!.setLanguage(Locale.FRENCH)
 
             /*if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                Log.e("TextToSpeak","ERR : Language not supported !")
+                Log.e("TextToSpeak
             }else{
                 roll.isEnabled = false
             }*/
@@ -71,9 +82,9 @@ class MainWindow : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     override fun onResume() {
         super.onResume()
-        val recyclerView = findViewById<RecyclerView>(R.id.list_color_display)
-        recyclerView.adapter = ColorPalletAdaptor(ArrayList<Color>())
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        val recyclerView = view?.findViewById<RecyclerView>(R.id.list_color_display)
+        recyclerView?.adapter = ColorPalletAdaptor(ArrayList<Color>())
+        recyclerView?.layoutManager = LinearLayoutManager(this.context)
 
         sensorManager.registerListener(accelListener, sensor,               //Add notre capteur à la liste des capteurs "vivant" du sensorManager, permet donc l'écoute sur ce capteur
             SensorManager.SENSOR_DELAY_NORMAL)
@@ -85,23 +96,22 @@ class MainWindow : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
     private fun rollDice(){
-        val text : TextView = findViewById(R.id.number)
+        val text: TextView? = view?.findViewById(R.id.number)
         val rd : Random = Random
 
         val de = 1 + rd.nextInt(7 - 1)
-        text.text = de.toString()
+        text?.text = de.toString()
 
-        val form : View = findViewById(R.id.dice_form)
-        val animator = AnimatorInflater.loadAnimator(this, R.animator.dice_animator)
+        val form : View? = view?.findViewById(R.id.dice_form)
+        val animator = AnimatorInflater.loadAnimator(this.context, R.animator.dice_animator)
         animator.setTarget(form)
         animator.start()
-        speakOut(text.text.toString())
+        speakOut(text?.text.toString())
 
         Handler().postDelayed({             //Thread permettant de relancer le dé uniquement 1 fois par seconde
             canRoll = true
         }, 2000)
     }
-
 
     private fun checkValue(x : Float,y : Float,z : Float){
         if(x >=20.0 || x<=-20|| y>=20 || y<=-10 || z<=-20 || z>=20){       //x.pow(2) --------> A regarder pour systeme plus propre //sensibilité moyenne
