@@ -1,4 +1,4 @@
-package but.app.needice.data.dao
+package but.app.needice.dao
 
 import androidx.room.Dao
 

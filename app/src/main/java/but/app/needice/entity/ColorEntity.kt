@@ -1,4 +1,4 @@
-package but.app.needice.data.entity
+package but.app.needice.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
