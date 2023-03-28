@@ -18,9 +18,6 @@ import but.app.needice.view.PlayFragment
 
 class HomeFragment : Fragment() {
 
-    private lateinit var playButton : Button
-    private lateinit var settingsButton : Button
-
     private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,9 +30,6 @@ class HomeFragment : Fragment() {
 
         var data = Stub().load()
 
-        playButton = view.findViewById<Button>(R.id.play_button)
-        settingsButton = view.findViewById<Button>(R.id.settings_button)
-
         view.findViewById<Button>(R.id.play_button).setOnClickListener{
             navController.navigate(R.id.playFragment)
         }
@@ -43,8 +37,6 @@ class HomeFragment : Fragment() {
         view.findViewById<Button>(R.id.settings_button).setOnClickListener{
             navController.navigate(R.id.settingsFragment)
         }
-
         return view
     }
-
 }

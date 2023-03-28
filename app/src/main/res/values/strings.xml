@@ -4,5 +4,7 @@
     <string name="settings_maj">SETTINGS</string>
     <string name="button">ROLL</string>
     <!-- TODO: Remove or change this placeholder text -->
+    <string name="left_drawer_button">L</string>
+    <string name="right_drawer_button">R</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

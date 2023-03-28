@@ -10,11 +10,13 @@ import android.hardware.SensorManager
 import android.os.Bundle
 import android.os.Handler
 import android.speech.tts.TextToSpeech
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,12 +32,13 @@ import kotlin.random.Random
 class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
 
     private var listen : TextToSpeech? = null
-    private lateinit var roll : Button
     private lateinit var sensorManager: SensorManager
     private lateinit var sensor: Sensor
     private lateinit var textX: TextView
     private lateinit var textY: TextView
     private lateinit var textZ: TextView
+    private lateinit var leftDrawer: FrameLayout
+    private lateinit var rightDrawer: FrameLayout
     private var canRoll: Boolean = true             //Permet de ne pas appeler le dé à l'infini
 
     private val languages = listOf(
@@ -59,7 +62,8 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
 
         //roll = view.findViewById(R.id.roll_button)
         listen = TextToSpeech(context, this)
-        rollDice()
+
+        activateLeftDrawer(view)
 
         return view
     }
@@ -121,7 +125,6 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
         else {
             canRoll = true
         }
-
     }
 
     @SuppressLint("SetTextI18n")        //Norme pour le text (comme UTF8)
@@ -138,6 +141,26 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
             textX.text = ("X : " + x.toInt())
             textY.text = ("Y : " + y.toInt())
             textZ.text = ("Z : " + z.toInt())
+        }
+    }
+
+    private fun activateLeftDrawer(view:View){
+
+        leftDrawer = view.findViewById(R.id.left_drawer)
+        rightDrawer = view.findViewById(R.id.right_drawer)
+
+        view.findViewById<Button>(R.id.button_left)?.setOnClickListener{
+            leftDrawer.visibility = View.VISIBLE
+        }
+        view.findViewById<Button>(R.id.button_left2)?.setOnClickListener{
+            leftDrawer.visibility = View.INVISIBLE
+        }
+
+        view.findViewById<Button>(R.id.button_right)?.setOnClickListener{
+            rightDrawer.visibility = View.VISIBLE
+        }
+        view.findViewById<Button>(R.id.button_right2)?.setOnClickListener{
+            rightDrawer.visibility = View.INVISIBLE
         }
     }
 }

@@ -7,7 +7,6 @@ import androidx.navigation.findNavController
 import but.app.needice.R
 
 class MainActivity : AppCompatActivity(){
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.nav_host_fragment)
