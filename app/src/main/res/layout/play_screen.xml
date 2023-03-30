@@ -103,13 +103,15 @@
             android:layout_gravity="left"
             android:background="@color/light_blue"
             android:visibility="invisible">
+
             <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/button_red"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="50dp"
                 android:layout_gravity="center_horizontal"
-                android:text="ROUGE"
-                android:textColor="@color/red">
-            </Button>
+                android:src="@drawable/color_select"/>
+
             <Button
                 android:id="@+id/button_left2"
                 android:layout_width="30dp"
@@ -141,5 +143,4 @@
             android:text="@string/right_drawer_button"/>
         </FrameLayout>
     </LinearLayout>
-
 </androidx.drawerlayout.widget.DrawerLayout>

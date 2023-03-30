@@ -11,7 +11,7 @@
         android:label="settingsFragment" />
     <fragment
         android:id="@+id/playFragment"
-        android:name="but.app.needice.view.PlayFragment"
+        android:name="but.app.needice.view.fragment.PlayFragment"
         android:label="playFragment" />
     <fragment
         android:id="@+id/homeFragment"

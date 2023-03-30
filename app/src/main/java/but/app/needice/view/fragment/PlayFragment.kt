@@ -1,4 +1,4 @@
-package but.app.needice.view
+package but.app.needice.view.fragment
 
 import android.animation.AnimatorInflater
 import android.annotation.SuppressLint
@@ -10,14 +10,14 @@ import android.hardware.SensorManager
 import android.os.Bundle
 import android.os.Handler
 import android.speech.tts.TextToSpeech
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.graphics.red
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -31,7 +31,7 @@ import kotlin.random.Random
 @Suppress("DEPRECATION")
 class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
 
-    private var listen : TextToSpeech? = null
+    private var listen: TextToSpeech? = null
     private lateinit var sensorManager: SensorManager
     private lateinit var sensor: Sensor
     private lateinit var textX: TextView
@@ -50,7 +50,12 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
     //private val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, languages.map { it.first })
     //spinner.adapter = adapter
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    @SuppressLint("CutPasteId")
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val view = inflater.inflate(R.layout.play_screen, container, false)
 
         sensorManager = context?.getSystemService(Context.SENSOR_SERVICE) as SensorManager
@@ -60,10 +65,18 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
         textY = view.findViewById(R.id.texty)
         textZ = view.findViewById(R.id.textz)
 
+
+        val dice = view.findViewById<ImageView>(R.id.dice_form)
+
+        view.findViewById<Button>(R.id.button_red)?.setOnClickListener {
+            //Là on accede à la couleur du dé 
+        }
+
+
         //roll = view.findViewById(R.id.roll_button)
         listen = TextToSpeech(context, this)
 
-        activateLeftDrawer(view)
+        activateDrawer(view)
 
         return view
     }
@@ -80,7 +93,7 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
         }
     }
 
-    private fun speakOut(text : String) {
+    private fun speakOut(text: String) {
         listen!!.speak(text, TextToSpeech.QUEUE_FLUSH, null)
     }
 
@@ -90,23 +103,27 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
         recyclerView?.adapter = ColorPalletAdaptor(ArrayList<Color>())
         recyclerView?.layoutManager = LinearLayoutManager(this.context)
 
-        sensorManager.registerListener(accelListener, sensor,               //Add notre capteur à la liste des capteurs "vivant" du sensorManager, permet donc l'écoute sur ce capteur
-            SensorManager.SENSOR_DELAY_NORMAL)
+        sensorManager.registerListener(
+            accelListener,
+            sensor,               //Add notre capteur à la liste des capteurs "vivant" du sensorManager, permet donc l'écoute sur ce capteur
+            SensorManager.SENSOR_DELAY_NORMAL
+        )
         //startActivityForResult(intent,0)
     }
+
     override fun onStop() {
-        super.onStop();
+        super.onStop()
         sensorManager.unregisterListener(accelListener)       //Add notre capteur à la liste des capteurs "mort" du sensorManager, désactive donc le capteur
     }
 
-    private fun rollDice(){
+    private fun rollDice() {
         val text: TextView? = view?.findViewById(R.id.number)
-        val rd : Random = Random
+        val rd: Random = Random
 
         val de = 1 + rd.nextInt(7 - 1)
         text?.text = de.toString()
 
-        val form : View? = view?.findViewById(R.id.dice_form)
+        val form: View? = view?.findViewById(R.id.dice_form)
         val animator = AnimatorInflater.loadAnimator(this.context, R.animator.dice_animator)
         animator.setTarget(form)
         animator.start()
@@ -117,12 +134,11 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
         }, 2000)
     }
 
-    private fun checkValue(x : Float,y : Float,z : Float){
-        if(x >=20.0 || x<=-20|| y>=20 || y<=-10 || z<=-20 || z>=20){       //x.pow(2) --------> A regarder pour systeme plus propre //sensibilité moyenne
+    private fun checkValue(x: Float, y: Float, z: Float) {
+        if (x >= 20.0 || x <= -20 || y >= 20 || y <= -10 || z <= -20 || z >= 20) {       //x.pow(2) --------> A regarder pour systeme plus propre //sensibilité moyenne
             canRoll = false
             rollDice()
-        }
-        else {
+        } else {
             canRoll = true
         }
     }
@@ -135,8 +151,8 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
             val y = event.values[1]     //Axe y du capteur
             val z = event.values[2]     //Axe z du capteur
 
-            if(canRoll){
-                checkValue(x,y,z)
+            if (canRoll) {
+                checkValue(x, y, z)
             }
             textX.text = ("X : " + x.toInt())
             textY.text = ("Y : " + y.toInt())
@@ -144,22 +160,22 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
         }
     }
 
-    private fun activateLeftDrawer(view:View){
+    private fun activateDrawer(view: View) {
 
         leftDrawer = view.findViewById(R.id.left_drawer)
         rightDrawer = view.findViewById(R.id.right_drawer)
 
-        view.findViewById<Button>(R.id.button_left)?.setOnClickListener{
+        view.findViewById<Button>(R.id.button_left)?.setOnClickListener {
             leftDrawer.visibility = View.VISIBLE
         }
-        view.findViewById<Button>(R.id.button_left2)?.setOnClickListener{
+        view.findViewById<Button>(R.id.button_left2)?.setOnClickListener {
             leftDrawer.visibility = View.INVISIBLE
         }
 
-        view.findViewById<Button>(R.id.button_right)?.setOnClickListener{
+        view.findViewById<Button>(R.id.button_right)?.setOnClickListener {
             rightDrawer.visibility = View.VISIBLE
         }
-        view.findViewById<Button>(R.id.button_right2)?.setOnClickListener{
+        view.findViewById<Button>(R.id.button_right2)?.setOnClickListener {
             rightDrawer.visibility = View.INVISIBLE
         }
     }
