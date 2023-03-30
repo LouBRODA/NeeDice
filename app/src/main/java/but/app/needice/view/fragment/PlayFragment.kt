@@ -60,6 +60,13 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
         textY = view.findViewById(R.id.texty)
         textZ = view.findViewById(R.id.textz)
 
+
+        val dice = view.findViewById<ImageView>(R.id.dice_form)
+
+        view.findViewById<Button>(R.id.button_red)?.setOnClickListener {
+            //Là on accede à la couleur du dé
+        }
+
         //roll = view.findViewById(R.id.roll_button)
         listen = TextToSpeech(context, this)
 
