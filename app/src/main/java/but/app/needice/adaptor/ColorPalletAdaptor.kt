@@ -5,10 +5,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import but.app.needice.R
+import but.app.needice.data.entity.ColorEntity
 import but.app.needice.model.Color
 import but.app.needice.view.holder.ColorPalletViewHolder
 
-class ColorPalletAdaptor(private val listColor : ArrayList<Color>) : RecyclerView.Adapter<ColorPalletViewHolder>(){
+class ColorPalletAdaptor(private val listColor : List<ColorEntity>) : RecyclerView.Adapter<ColorPalletViewHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ColorPalletViewHolder {
         val cell = LayoutInflater.from(parent.context).inflate(R.layout.cellule_color, parent, false)

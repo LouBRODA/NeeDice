@@ -110,7 +110,7 @@
                 android:layout_height="100dp"
                 android:layout_marginTop="50dp"
                 android:layout_gravity="center_horizontal"
-                android:src="@drawable/color_select"/>
+                android:background="@drawable/color_select"/>
 
             <Button
                 android:id="@+id/button_left2"
@@ -118,6 +118,7 @@
                 android:layout_height="150dp"
                 android:layout_gravity="center|right"
                 android:text="@string/left_drawer_button"/>
+
         </FrameLayout>
 
 

@@ -8,8 +8,8 @@ import androidx.room.PrimaryKey
 class ColorEntity {
 
     @PrimaryKey(autoGenerate = false)
-    val id: String = ""
+    val id: String?=null
 
     @ColumnInfo
-    val name: String = ""
+    val name: String?=null
 }

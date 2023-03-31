@@ -3,10 +3,12 @@ package but.app.needice.view.fragment
 import android.animation.AnimatorInflater
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.ColorStateList
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.speech.tts.TextToSpeech
@@ -17,12 +19,18 @@ import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.graphics.red
+import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getColor
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
 import but.app.needice.R
 import but.app.needice.adaptor.ColorPalletAdaptor
+import but.app.needice.data.Stub
+import but.app.needice.data.database.Database
+import but.app.needice.data.entity.ColorEntity
 import but.app.needice.model.Color
 import java.util.*
 import kotlin.collections.ArrayList
@@ -50,6 +58,7 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
     //private val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, languages.map { it.first })
     //spinner.adapter = adapter
 
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     @SuppressLint("CutPasteId")
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -69,9 +78,9 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
         val dice = view.findViewById<ImageView>(R.id.dice_form)
 
         view.findViewById<Button>(R.id.button_red)?.setOnClickListener {
-            //Là on accede à la couleur du dé 
+            val color = getColor(requireContext(), R.color.red)
+            dice.setBackgroundColor(color)
         }
-
 
         //roll = view.findViewById(R.id.roll_button)
         listen = TextToSpeech(context, this)
@@ -100,7 +109,16 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
     override fun onResume() {
         super.onResume()
         val recyclerView = view?.findViewById<RecyclerView>(R.id.list_color_display)
-        recyclerView?.adapter = ColorPalletAdaptor(ArrayList<Color>())
+
+        val data = Stub().load()
+
+        val db = Room.databaseBuilder(requireContext(), Database::class.java,"database").allowMainThreadQueries().build()
+
+        val colorList = db.daoColor().getColors()
+
+        val adapter = ColorPalletAdaptor(colorList)
+
+        recyclerView?.adapter = adapter
         recyclerView?.layoutManager = LinearLayoutManager(this.context)
 
         sensorManager.registerListener(
