@@ -6,9 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentContainerView
+import androidx.viewpager.widget.ViewPager
 import but.app.needice.R
+import but.app.needice.adaptor.FlagPagerAdapter
 import but.app.needice.data.Stub
+import java.util.*
+
 
 class SettingsFragment : Fragment() {
 
@@ -17,7 +20,53 @@ class SettingsFragment : Fragment() {
 
         var data = Stub().load()
 
+        val viewPager: ViewPager = view.findViewById(R.id.viewPager)
+        val flagIds: List<Int> =
+            Arrays.asList(R.drawable.flag_england, R.drawable.flag_france, R.drawable.flag_spain)
+        val flagPagerAdapter = FlagPagerAdapter(requireContext(), flagIds)
+        viewPager.adapter = flagPagerAdapter
+
+        val btnPrev: Button = view.findViewById(R.id.arrow_left)
+        val btnNext: Button = view.findViewById(R.id.arrow_right)
+
+        viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+            }
+
+            override fun onPageSelected(position: Int) {
+                if (position == 0) {
+                    btnPrev.visibility = View.INVISIBLE
+                } else {
+                    btnPrev.visibility = View.VISIBLE
+                }
+
+                if (position == flagPagerAdapter.count - 1) {
+                    btnNext.visibility = View.INVISIBLE
+                } else {
+                    btnNext.visibility = View.VISIBLE
+                }
+            }
+
+            override fun onPageScrollStateChanged(state: Int) {
+            }
+        })
+
+        btnPrev.setOnClickListener {
+            viewPager.currentItem -= 1
+        }
+
+        btnNext.setOnClickListener {
+            viewPager.currentItem += 1
+        }
+
+        // initial button state
+        btnPrev.visibility = View.INVISIBLE
+        if (flagPagerAdapter.count > 1) {
+            btnNext.visibility = View.VISIBLE
+        } else {
+            btnNext.visibility = View.INVISIBLE
+        }
+
         return view
     }
-
 }
