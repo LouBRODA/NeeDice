@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import but.app.needice.R
 import but.app.needice.adaptor.ColorPalletAdaptor
+import but.app.needice.language.OnLanguageChangeListener
 import but.app.needice.model.Color
 import java.util.*
 import kotlin.collections.ArrayList
@@ -40,12 +41,6 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
     private lateinit var leftDrawer: FrameLayout
     private lateinit var rightDrawer: FrameLayout
     private var canRoll: Boolean = true             //Permet de ne pas appeler le dé à l'infini
-
-    private val languages = listOf(
-        Pair("English", "en"),
-        Pair("French", "fr"),
-        Pair("Spanish", "es")
-    )
 
     //private val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, languages.map { it.first })
     //spinner.adapter = adapter
@@ -70,13 +65,13 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
 
     override fun onInit(state: Int) {
         if (state == TextToSpeech.SUCCESS) {
-            val result = listen!!.setLanguage(Locale.FRENCH)
-
-            /*if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                Log.e("TextToSpeak
-            }else{
-                roll.isEnabled = false
-            }*/
+            val prefs = requireActivity().getSharedPreferences("LanguageChosen", Context.MODE_PRIVATE)
+            val language = prefs.getString("language", Locale.getDefault().language)
+            val locale = language?.let { Locale(it) }
+            val result = listen!!.setLanguage(locale)
+            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                Log.e("TextToSpeak", "Language is not supported")
+            }
         }
     }
 

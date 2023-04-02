@@ -5,13 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Switch
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
+import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
+import androidx.appcompat.widget.SwitchCompat
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import but.app.needice.R
 import but.app.needice.adaptor.FlagPagerAdapter
 import but.app.needice.data.Stub
+import but.app.needice.language.OnLanguageChangeListener
 import java.util.*
-
 
 class SettingsFragment : Fragment() {
 
@@ -29,9 +34,10 @@ class SettingsFragment : Fragment() {
         val btnPrev: Button = view.findViewById(R.id.arrow_left)
         val btnNext: Button = view.findViewById(R.id.arrow_right)
 
+        val dark_mode_select: SwitchCompat = view.findViewById(R.id.dark_mode_select)
+
         viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-            }
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
 
             override fun onPageSelected(position: Int) {
                 if (position == 0) {
@@ -45,10 +51,10 @@ class SettingsFragment : Fragment() {
                 } else {
                     btnNext.visibility = View.VISIBLE
                 }
+
             }
 
-            override fun onPageScrollStateChanged(state: Int) {
-            }
+            override fun onPageScrollStateChanged(state: Int) {}
         })
 
         btnPrev.setOnClickListener {
@@ -65,6 +71,14 @@ class SettingsFragment : Fragment() {
             btnNext.visibility = View.VISIBLE
         } else {
             btnNext.visibility = View.INVISIBLE
+        }
+
+        dark_mode_select.setOnCheckedChangeListener{ buttonView, isChecked ->
+            if (isChecked){
+                AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_YES)
+            }else{
+                AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_NO)
+            }
         }
 
         return view
