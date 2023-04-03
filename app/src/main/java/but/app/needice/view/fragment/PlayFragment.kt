@@ -18,6 +18,7 @@ import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -176,21 +177,23 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
 
     private fun buttonColor(view: View){
         view.findViewById<Button>(R.id.button_red)?.setOnClickListener {
-            changeColor(R.color.red)
+            val red = ContextCompat.getColor(requireContext(), R.color.red)
+            changeColor(red)
         }
 
         view.findViewById<Button>(R.id.button_green)?.setOnClickListener {
-            changeColor(R.color.green)
+            val green = ContextCompat.getColor(requireContext(), R.color.green)
+            changeColor(green)
         }
 
         view.findViewById<Button>(R.id.button_black)?.setOnClickListener {
-            changeColor(R.color.black)
+            val black = ContextCompat.getColor(requireContext(), R.color.black)
+            changeColor(black)
         }
     }
 
     @SuppressLint("ResourceAsColor")
     private fun changeColor(color: Int){
-        dice.background.clearColorFilter()
-        dice.background.setColorFilter(color, PorterDuff.Mode.SRC_OVER)
+        dice.setBackgroundColor(color)
     }
 }
