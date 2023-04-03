@@ -17,7 +17,7 @@
             android:layout_width="222dp"
             android:layout_height="222dp"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/dice_form"/>
+            android:background="@drawable/dice_form" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -110,7 +110,21 @@
                 android:layout_height="100dp"
                 android:layout_marginTop="50dp"
                 android:layout_gravity="center_horizontal"
-                android:src="@drawable/color_select"/>
+                android:background="@drawable/red_button"/>
+            <Button
+                android:id="@+id/button_green"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="200dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/green_button"/>
+            <Button
+                android:id="@+id/button_black"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="350dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/black_button"/>
 
             <Button
                 android:id="@+id/button_left2"

@@ -3,6 +3,7 @@ package but.app.needice.view.fragment
 import android.animation.AnimatorInflater
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.PorterDuff
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -17,7 +18,6 @@ import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.graphics.red
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,8 +25,8 @@ import but.app.needice.R
 import but.app.needice.adaptor.ColorPalletAdaptor
 import but.app.needice.model.Color
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.random.Random
+
 
 @Suppress("DEPRECATION")
 class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
@@ -40,6 +40,7 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
     private lateinit var leftDrawer: FrameLayout
     private lateinit var rightDrawer: FrameLayout
     private var canRoll: Boolean = true             //Permet de ne pas appeler le dé à l'infini
+    private lateinit var dice : ImageView
 
     private val languages = listOf(
         Pair("English", "en"),
@@ -50,7 +51,7 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
     //private val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, languages.map { it.first })
     //spinner.adapter = adapter
 
-    @SuppressLint("CutPasteId")
+    @SuppressLint("CutPasteId", "ResourceAsColor")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -65,19 +66,12 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
         textY = view.findViewById(R.id.texty)
         textZ = view.findViewById(R.id.textz)
 
+        dice = view.findViewById(R.id.dice_form)
 
-        val dice = view.findViewById<ImageView>(R.id.dice_form)
-
-        view.findViewById<Button>(R.id.button_red)?.setOnClickListener {
-            //Là on accede à la couleur du dé 
-        }
-
-
-        //roll = view.findViewById(R.id.roll_button)
         listen = TextToSpeech(context, this)
 
         activateDrawer(view)
-
+        buttonColor(view)
         return view
     }
 
@@ -178,5 +172,25 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
         view.findViewById<Button>(R.id.button_right2)?.setOnClickListener {
             rightDrawer.visibility = View.INVISIBLE
         }
+    }
+
+    private fun buttonColor(view: View){
+        view.findViewById<Button>(R.id.button_red)?.setOnClickListener {
+            changeColor(R.color.red)
+        }
+
+        view.findViewById<Button>(R.id.button_green)?.setOnClickListener {
+            changeColor(R.color.green)
+        }
+
+        view.findViewById<Button>(R.id.button_black)?.setOnClickListener {
+            changeColor(R.color.black)
+        }
+    }
+
+    @SuppressLint("ResourceAsColor")
+    private fun changeColor(color: Int){
+        dice.background.clearColorFilter()
+        dice.background.setColorFilter(color, PorterDuff.Mode.SRC_OVER)
     }
 }
