@@ -7,7 +7,6 @@ import android.widget.Switch
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import but.app.needice.R
-import but.app.needice.language.OnLanguageChangeListener
 import but.app.needice.view.fragment.SettingsFragment
 import java.util.*
 

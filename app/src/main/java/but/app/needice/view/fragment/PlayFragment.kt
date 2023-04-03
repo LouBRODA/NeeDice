@@ -23,7 +23,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import but.app.needice.R
 import but.app.needice.adaptor.ColorPalletAdaptor
-import but.app.needice.language.OnLanguageChangeListener
 import but.app.needice.model.Color
 import java.util.*
 import kotlin.collections.ArrayList

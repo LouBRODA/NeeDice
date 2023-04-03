@@ -1,6 +1,9 @@
 package but.app.needice.view.fragment
 
+import android.content.SharedPreferences
+import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,10 +18,9 @@ import androidx.viewpager.widget.ViewPager
 import but.app.needice.R
 import but.app.needice.adaptor.FlagPagerAdapter
 import but.app.needice.data.Stub
-import but.app.needice.language.OnLanguageChangeListener
 import java.util.*
 
-class SettingsFragment : Fragment() {
+class SettingsFragment : Fragment(), FlagPagerAdapter.OnClickListener {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.settings_screen, container, false)
@@ -27,14 +29,16 @@ class SettingsFragment : Fragment() {
 
         val viewPager: ViewPager = view.findViewById(R.id.viewPager)
         val flagIds: List<Int> =
-            Arrays.asList(R.drawable.flag_england, R.drawable.flag_france, R.drawable.flag_spain)
+            listOf(R.drawable.flag_england, R.drawable.flag_france, R.drawable.flag_spain)
         val flagPagerAdapter = FlagPagerAdapter(requireContext(), flagIds)
         viewPager.adapter = flagPagerAdapter
+
+        flagPagerAdapter.setOnClickListener(this)
 
         val btnPrev: Button = view.findViewById(R.id.arrow_left)
         val btnNext: Button = view.findViewById(R.id.arrow_right)
 
-        val dark_mode_select: SwitchCompat = view.findViewById(R.id.dark_mode_select)
+        val darkModeSelect: SwitchCompat = view.findViewById(R.id.dark_mode_select)
 
         viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
@@ -51,7 +55,6 @@ class SettingsFragment : Fragment() {
                 } else {
                     btnNext.visibility = View.VISIBLE
                 }
-
             }
 
             override fun onPageScrollStateChanged(state: Int) {}
@@ -73,7 +76,7 @@ class SettingsFragment : Fragment() {
             btnNext.visibility = View.INVISIBLE
         }
 
-        dark_mode_select.setOnCheckedChangeListener{ buttonView, isChecked ->
+        darkModeSelect.setOnCheckedChangeListener{ _, isChecked ->
             if (isChecked){
                 AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_YES)
             }else{
@@ -83,4 +86,26 @@ class SettingsFragment : Fragment() {
 
         return view
     }
+
+    override fun onItemClick(position: Int) {
+        val language = when (position) {
+            0 -> "en"
+            1 -> "fr"
+            2 -> "es"
+            else -> "en" // fallback to English if index is out of range
+        }
+        changeLanguage(language)
+    }
+
+    private fun changeLanguage(language: String) {
+        val locale = Locale(language)
+        Log.d("SettingsFragment", "Selected language: $language")
+        Log.d("SettingsFragment", "Locale: $locale")
+        Locale.setDefault(locale)
+        val config = Configuration()
+        config.locale = locale
+        requireActivity().resources.updateConfiguration(config, requireActivity().resources.displayMetrics)
+        requireActivity().recreate()
+    }
+
 }

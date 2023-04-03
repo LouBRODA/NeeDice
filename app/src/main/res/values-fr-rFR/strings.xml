@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_maj">PARAMÈTRES</string>
+    <string name="button">LANCER</string>
+    <string name="dark_mode">Mode Sombre</string>
+    <string name="left_drawer_button">G</string>
+    <string name="right_drawer_button">D</string>
+    <string name="play_maj">JOUER</string>
+</resources>
