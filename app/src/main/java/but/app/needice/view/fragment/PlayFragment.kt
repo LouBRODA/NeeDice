@@ -8,6 +8,8 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.speech.tts.TextToSpeech
@@ -25,10 +27,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import but.app.needice.R
 import but.app.needice.adaptor.ColorPalletAdaptor
+import but.app.needice.api.FreesoundAPI
+import but.app.needice.api.FreesoundResponse
 import but.app.needice.model.Color
 import java.util.*
 import kotlin.random.Random
 
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 @Suppress("DEPRECATION")
 class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
@@ -113,6 +122,48 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
         val de = 1 + rd.nextInt(7 - 1)
         text?.text = de.toString()
 
+
+        // Appel de l'API Freesound.org pour récupérer un son de dé
+        val apikey = "KGAIFY355mPtfFnqxRFDRXTpxe1m0eP7EN6cVxRe"
+        val tag = "dice"
+        val soundsPerPage = 10
+        val soundType = "wav"
+        val minDuration = 0.5
+        val maxDuration = 2.0
+        val url = "https://freesound.org/apiv2/search/text/?query=629983&token=$apikey"
+
+        val client = Retrofit.Builder()
+            .baseUrl("https://freesound.org")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(FreesoundAPI::class.java)
+
+        val call: Call<FreesoundResponse> = client.getSounds(url)
+        call.enqueue(object : Callback<FreesoundResponse> {
+            override fun onResponse(call: Call<FreesoundResponse>, response: Response<FreesoundResponse>) {
+                if (response.isSuccessful && response.body() != null) {
+                    // Récupération d'un son aléatoire de la liste de résultats
+                    val sounds = response.body()?.results
+                    val randomSound = sounds?.get(rd.nextInt(sounds.size))
+                    val soundUrl = randomSound?.previews?.preview_hq_mp3 ?: ""
+
+                    // Utilisation de la bibliothèque MediaPlayer pour jouer le son de dé
+                    val soundUri = Uri.parse(soundUrl)
+                    val mp = MediaPlayer()
+                    context?.let { mp.setDataSource(it, soundUri) }
+                    mp.prepare()
+                    mp.setOnPreparedListener {
+                        mp.start()
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<FreesoundResponse>, t: Throwable) {
+                Log.e("ROLL_DICE", "Erreur lors de l'appel de l'API Freesound.org : ${t.message}")
+            }
+        })
+
+
         val form: View? = view?.findViewById(R.id.dice_form)
         val animator = AnimatorInflater.loadAnimator(this.context, R.animator.dice_animator)
         animator.setTarget(form)
@@ -151,22 +202,23 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
     }
 
     private fun activateDrawer(view: View) {
-
         leftDrawer = view.findViewById(R.id.left_drawer)
         rightDrawer = view.findViewById(R.id.right_drawer)
 
-        view.findViewById<Button>(R.id.button_left)?.setOnClickListener {
-            leftDrawer.visibility = View.VISIBLE
-        }
-        view.findViewById<Button>(R.id.button_left2)?.setOnClickListener {
-            leftDrawer.visibility = View.INVISIBLE
+        val buttonOpen = view.findViewById<Button>(R.id.button_left)
+        buttonOpen.setOnClickListener {
+            if (rightDrawer.visibility == View.GONE) {
+                rightDrawer.visibility = View.VISIBLE
+                leftDrawer.visibility = View.GONE
+            }
         }
 
-        view.findViewById<Button>(R.id.button_right)?.setOnClickListener {
-            rightDrawer.visibility = View.VISIBLE
-        }
-        view.findViewById<Button>(R.id.button_right2)?.setOnClickListener {
-            rightDrawer.visibility = View.INVISIBLE
+        val buttonClose = view.findViewById<Button>(R.id.button_right)
+        buttonClose.setOnClickListener {
+            if (leftDrawer.visibility == View.GONE) {
+                rightDrawer.visibility = View.GONE
+                leftDrawer.visibility = View.VISIBLE
+            }
         }
     }
 
