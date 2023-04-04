@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_maj">IMPOSTAZIONI</string>
+    <string name="button">ROTOLO</string>
+    <string name="dark_mode">Modalità scura</string>
+    <string name="left_drawer_button">S</string>
+    <string name="right_drawer_button">L</string>
+    <string name="play_maj">GIOCARE</string>
+</resources>

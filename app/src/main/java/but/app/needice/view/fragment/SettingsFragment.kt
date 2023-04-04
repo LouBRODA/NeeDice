@@ -29,7 +29,7 @@ class SettingsFragment : Fragment(), FlagPagerAdapter.OnClickListener {
 
         val viewPager: ViewPager = view.findViewById(R.id.viewPager)
         val flagIds: List<Int> =
-            listOf(R.drawable.flag_england, R.drawable.flag_france, R.drawable.flag_spain)
+            listOf(R.drawable.flag_england, R.drawable.flag_france, R.drawable.flag_italy)
         val flagPagerAdapter = FlagPagerAdapter(requireContext(), flagIds)
         viewPager.adapter = flagPagerAdapter
 
@@ -91,7 +91,7 @@ class SettingsFragment : Fragment(), FlagPagerAdapter.OnClickListener {
         val language = when (position) {
             0 -> "en"
             1 -> "fr"
-            2 -> "es"
+            2 -> "it"
             else -> "en" // fallback to English if index is out of range
         }
         changeLanguage(language)
