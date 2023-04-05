@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Switch
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
@@ -38,6 +39,7 @@ class SettingsFragment : Fragment(), FlagPagerAdapter.OnClickListener {
         val btnPrev: Button = view.findViewById(R.id.arrow_left)
         val btnNext: Button = view.findViewById(R.id.arrow_right)
 
+        var selectedLanguage : TextView = view.findViewById(R.id.selected_language)
         val darkModeSelect: SwitchCompat = view.findViewById(R.id.dark_mode_select)
 
         viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
@@ -98,6 +100,7 @@ class SettingsFragment : Fragment(), FlagPagerAdapter.OnClickListener {
     }
 
     private fun changeLanguage(language: String) {
+
         val locale = Locale(language)
         Log.d("SettingsFragment", "Selected language: $language")
         Log.d("SettingsFragment", "Locale: $locale")

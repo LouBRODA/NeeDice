@@ -6,4 +6,5 @@
     <string name="left_drawer_button">G</string>
     <string name="right_drawer_button">D</string>
     <string name="play_maj">JOUER</string>
+    <string name="selected_language">Langage selectionné :</string>
 </resources>
