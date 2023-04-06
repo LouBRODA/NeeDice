@@ -6,5 +6,5 @@
     <string name="left_drawer_button">L</string>
     <string name="right_drawer_button">R</string>
     <string name="play_maj">PLAY</string>
-    <string name="selected_language">Selected Language :</string>
+    <string name="selected_language">Selected Language : %s</string>
 </resources>

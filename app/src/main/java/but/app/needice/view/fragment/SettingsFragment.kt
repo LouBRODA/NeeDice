@@ -1,5 +1,6 @@
 package but.app.needice.view.fragment
 
+import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.os.Bundle
@@ -39,8 +40,11 @@ class SettingsFragment : Fragment(), FlagPagerAdapter.OnClickListener {
         val btnPrev: Button = view.findViewById(R.id.arrow_left)
         val btnNext: Button = view.findViewById(R.id.arrow_right)
 
-        var selectedLanguage : TextView = view.findViewById(R.id.selected_language)
+        val selectedLanguage : TextView = view.findViewById(R.id.selected_language)
+
         val darkModeSelect: SwitchCompat = view.findViewById(R.id.dark_mode_select)
+        val isDarkModeOn = AppCompatDelegate.getDefaultNightMode() == MODE_NIGHT_YES
+        darkModeSelect.isChecked = isDarkModeOn
 
         viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
@@ -85,6 +89,10 @@ class SettingsFragment : Fragment(), FlagPagerAdapter.OnClickListener {
                 AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_NO)
             }
         }
+
+        val currentLanguage = resources.configuration.locale.language
+        val newText = getString(R.string.selected_language, currentLanguage)
+        selectedLanguage.text = newText
 
         return view
     }
