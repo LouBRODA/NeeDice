@@ -27,7 +27,7 @@
 
             <Button
                 android:id="@+id/button_left"
-                android:layout_width="30dp"
+                android:layout_width="40dp"
                 android:layout_height="150dp"
                 android:layout_gravity="start"
                 android:text="@string/left_drawer_button"/>
@@ -39,7 +39,7 @@
 
             <Button
                 android:id="@+id/button_right"
-                android:layout_width="30dp"
+                android:layout_width="40dp"
                 android:layout_height="150dp"
                 android:layout_gravity="end"
                 android:text="@string/right_drawer_button"/>
@@ -57,36 +57,6 @@
             android:textSize="40sp"
             android:textColor="@color/black"/>
 
-        <TextView
-            android:id="@+id/textx"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:textSize="20sp"
-            android:textColor="@color/black"/>
-
-        <TextView
-            android:id="@+id/texty"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:textSize="20sp"
-            android:textColor="@color/black"/>
-
-        <TextView
-            android:id="@+id/textz"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:textSize="20sp"
-            android:textColor="@color/black"/>
-
     </LinearLayout>
 
     <LinearLayout
@@ -100,7 +70,7 @@
             android:id="@+id/left_drawer"
             android:layout_width="200dp"
             android:layout_height="match_parent"
-            android:layout_gravity="left"
+            android:layout_gravity="start"
             android:background="@color/light_blue"
             android:visibility="invisible">
 
@@ -128,9 +98,9 @@
 
             <Button
                 android:id="@+id/button_left2"
-                android:layout_width="30dp"
+                android:layout_width="40dp"
                 android:layout_height="150dp"
-                android:layout_gravity="center|right"
+                android:layout_gravity="center|end"
                 android:text="@string/left_drawer_button"/>
         </FrameLayout>
 
@@ -146,15 +116,75 @@
             android:id="@+id/right_drawer"
             android:layout_width="200dp"
             android:layout_height="match_parent"
-            android:layout_gravity="right"
+            android:layout_gravity="end"
             android:background="@color/light_blue"
             android:visibility="invisible">
-        <Button
-            android:id="@+id/button_right2"
-            android:layout_width="30dp"
-            android:layout_height="150dp"
-            android:layout_gravity="center|left"
-            android:text="@string/right_drawer_button"/>
+
+            <TextView
+                android:id="@+id/NumberSelected"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="15sp"
+                android:textColor="@color/white"/>
+
+            <Button
+                android:id="@+id/button_2"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="30dp"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/number_2"
+                android:textSize="35sp"
+                android:textColor="@color/black"
+                android:background="@drawable/number_button"/>
+            <Button
+                android:id="@+id/button_3"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="200dp"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/number_3"
+                android:textSize="35sp"
+                android:textColor="@color/black"
+                android:background="@drawable/number_button"/>
+            <Button
+                android:id="@+id/button_4"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="350dp"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/number_4"
+                android:textSize="35sp"
+                android:textColor="@color/black"
+                android:background="@drawable/number_button"/>
+            <Button
+                android:id="@+id/button_5"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="500dp"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/number_5"
+                android:textSize="35sp"
+                android:textColor="@color/black"
+                android:background="@drawable/number_button"/>
+            <Button
+                android:id="@+id/button_6"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="650dp"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/number_6"
+                android:textSize="35sp"
+                android:textColor="@color/black"
+                android:background="@drawable/number_button"/>
+
+            <Button
+                android:id="@+id/button_right2"
+                android:layout_width="40dp"
+                android:layout_height="150dp"
+                android:layout_gravity="center|start"
+                android:text="@string/right_drawer_button"/>
         </FrameLayout>
     </LinearLayout>
 </androidx.drawerlayout.widget.DrawerLayout>

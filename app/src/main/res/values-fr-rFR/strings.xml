@@ -6,4 +6,10 @@
     <string name="left_drawer_button">G</string>
     <string name="right_drawer_button">D</string>
     <string name="play_maj">JOUER</string>
+    <string name="dice_Selected">Dé selectionné :</string>
+    <string name="number_2">2</string>
+    <string name="number_3">3</string>
+    <string name="number_4">4</string>
+    <string name="number_5">5</string>
+    <string name="number_6">6</string>
 </resources>

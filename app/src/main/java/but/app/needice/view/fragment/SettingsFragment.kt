@@ -107,5 +107,4 @@ class SettingsFragment : Fragment(), FlagPagerAdapter.OnClickListener {
         requireActivity().resources.updateConfiguration(config, requireActivity().resources.displayMetrics)
         requireActivity().recreate()
     }
-
 }

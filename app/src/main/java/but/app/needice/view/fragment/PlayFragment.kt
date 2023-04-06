@@ -36,18 +36,16 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
     private var listen: TextToSpeech? = null
     private lateinit var sensorManager: SensorManager
     private lateinit var sensor: Sensor
-    private lateinit var textX: TextView
-    private lateinit var textY: TextView
-    private lateinit var textZ: TextView
+    private lateinit var numberSelected: TextView
     private lateinit var leftDrawer: FrameLayout
     private lateinit var rightDrawer: FrameLayout
     private var canRoll: Boolean = true             //Permet de ne pas appeler le dé à l'infini
     private lateinit var dice : ImageView
-
+    private var diceValue : Int = 7
     //private val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, languages.map { it.first })
     //spinner.adapter = adapter
 
-    @SuppressLint("CutPasteId", "ResourceAsColor")
+    @SuppressLint("CutPasteId", "ResourceAsColor", "SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -58,9 +56,9 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
         sensorManager = context?.getSystemService(Context.SENSOR_SERVICE) as SensorManager
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
 
-        textX = view.findViewById(R.id.textx)
-        textY = view.findViewById(R.id.texty)
-        textZ = view.findViewById(R.id.textz)
+        numberSelected = view.findViewById(R.id.NumberSelected)
+
+        numberSelected.text = "Number Selected : 6"
 
         dice = view.findViewById(R.id.dice_form)
 
@@ -68,6 +66,7 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
 
         activateDrawer(view)
         buttonColor(view)
+        buttonNumber(view)
         return view
     }
 
@@ -109,8 +108,7 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
     private fun rollDice() {
         val text: TextView? = view?.findViewById(R.id.number)
         val rd: Random = Random
-
-        val de = 1 + rd.nextInt(7 - 1)
+        val de = 1 + rd.nextInt(diceValue - 1)
         text?.text = de.toString()
 
         val form: View? = view?.findViewById(R.id.dice_form)
@@ -144,9 +142,6 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
             if (canRoll) {
                 checkValue(x, y, z)
             }
-            textX.text = ("X : " + x.toInt())
-            textY.text = ("Y : " + y.toInt())
-            textZ.text = ("Z : " + z.toInt())
         }
     }
 
@@ -167,6 +162,34 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
         }
         view.findViewById<Button>(R.id.button_right2)?.setOnClickListener {
             rightDrawer.visibility = View.INVISIBLE
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun buttonNumber(view: View){
+        view.findViewById<Button>(R.id.button_2)?.setOnClickListener {
+            diceValue = 3
+            numberSelected.text = "Number Selected : 2"
+        }
+
+        view.findViewById<Button>(R.id.button_3)?.setOnClickListener {
+            diceValue = 4
+            numberSelected.text = "Number Selected : 3"
+        }
+
+        view.findViewById<Button>(R.id.button_4)?.setOnClickListener {
+            diceValue = 5
+            numberSelected.text = "Number Selected : 4"
+        }
+
+        view.findViewById<Button>(R.id.button_5)?.setOnClickListener {
+            diceValue = 6
+            numberSelected.text = "Number Selected : 5"
+        }
+
+        view.findViewById<Button>(R.id.button_6)?.setOnClickListener {
+            diceValue = 7
+            numberSelected.text = "Number Selected : 6"
         }
     }
 
