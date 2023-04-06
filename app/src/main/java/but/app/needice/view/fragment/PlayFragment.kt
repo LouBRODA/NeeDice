@@ -1,9 +1,11 @@
 package but.app.needice.view.fragment
 
+import android.Manifest.permission
 import android.animation.AnimatorInflater
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -20,10 +22,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -55,27 +55,12 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
     private lateinit var dice : ImageView
 
     private lateinit var speechRecognizer: SpeechRecognizer
-    private val recognitionListener = object : RecognitionListener {
-        override fun onReadyForSpeech(params: Bundle?) {}
-        override fun onBeginningOfSpeech() {}
-        override fun onRmsChanged(rmsdB: Float) {}
-        override fun onBufferReceived(buffer: ByteArray?) {}
-        override fun onEndOfSpeech() {}
-        override fun onError(error: Int) {}
-        override fun onResults(results: Bundle) {
-            val matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-            if (matches != null) {
-                for (match in matches) {
-                    if (match.contains("yes")) {
-                        rollDice()
-                        break
-                    }
-                }
-            }
-        }
-        override fun onPartialResults(partialResults: Bundle?) {}
-        override fun onEvent(eventType: Int, params: Bundle?) {}
-    }
+    private lateinit var recognitionListener: RecognitionListener
+
+    private val REQUEST_RECORD_AUDIO_PERMISSION = 200
+
+    private var permissionToRecordAccepted = false
+    private var permissions: Array<String> = arrayOf(permission.RECORD_AUDIO)
 
     @SuppressLint("CutPasteId", "ResourceAsColor")
     override fun onCreateView(
@@ -96,15 +81,57 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
 
         listen = TextToSpeech(context, this)
 
+
+        // Vérification des permissions pour enregistrer l'audio
+        ActivityCompat.requestPermissions(
+            requireActivity(),
+            permissions,
+            REQUEST_RECORD_AUDIO_PERMISSION
+        )
+
+        // Définition du listener de reconnaissance vocale
+        recognitionListener = object : RecognitionListener {
+            override fun onReadyForSpeech(params: Bundle?) {}
+            override fun onBeginningOfSpeech() {}
+            override fun onRmsChanged(rmsdB: Float) {}
+            override fun onBufferReceived(buffer: ByteArray?) {}
+            override fun onEndOfSpeech() {}
+            override fun onError(error: Int) {}
+            override fun onResults(results: Bundle) {
+                val matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+                if (matches != null) {
+                    for (match in matches) {
+                        if (match.contains("yes")) {
+                            rollDice()
+                            break
+                        }
+                    }
+                }
+            }
+            override fun onPartialResults(partialResults: Bundle?) {}
+            override fun onEvent(eventType: Int, params: Bundle?) {}
+        }
+
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(context)
+
         val micro = view.findViewById<Button>(R.id.micro)
         micro.setOnClickListener {
-            println("GOGOGOGOGO")
-            val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
-            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-            intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, requireContext().packageName)
-            speechRecognizer.startListening(intent)
-            speechRecognizer.setRecognitionListener(recognitionListener)
+            if (permissionToRecordAccepted) {
+                val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+                intent.putExtra(
+                    RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                    RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+                )
+                intent.putExtra(
+                    RecognizerIntent.EXTRA_CALLING_PACKAGE,
+                    requireContext().packageName
+                )
+                speechRecognizer.startListening(intent)
+                speechRecognizer.setRecognitionListener(recognitionListener)
+            } else {
+                Toast.makeText(context, "Permission to use microphone not granted", Toast.LENGTH_SHORT)
+                    .show()
+            }
         }
 
         activateDrawer(view)
@@ -112,6 +139,14 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
         return view
     }
 
+    @Deprecated("Deprecated")
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        when (requestCode) {
+            REQUEST_RECORD_AUDIO_PERMISSION -> {
+                permissionToRecordAccepted = grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED
+            }
+        }
+    }
 
     override fun onInit(state: Int) {
         if (state == TextToSpeech.SUCCESS) {
