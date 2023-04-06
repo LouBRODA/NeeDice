@@ -10,8 +10,6 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import android.media.MediaPlayer
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.speech.RecognitionListener
@@ -31,11 +29,6 @@ import androidx.recyclerview.widget.RecyclerView
 import but.app.needice.R
 import but.app.needice.adaptor.ColorPalletAdaptor
 import but.app.needice.model.Color
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
 import kotlin.random.Random
 

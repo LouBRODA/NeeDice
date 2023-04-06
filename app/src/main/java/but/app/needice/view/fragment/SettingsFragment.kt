@@ -1,7 +1,5 @@
 package but.app.needice.view.fragment
 
-import android.annotation.SuppressLint
-import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
@@ -9,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.Switch
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
@@ -19,7 +16,15 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import but.app.needice.R
 import but.app.needice.adaptor.FlagPagerAdapter
+import but.app.needice.api.ITimezoneAPI
+import but.app.needice.api.TimezoneResponse
 import but.app.needice.data.Stub
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import java.text.SimpleDateFormat
 import java.util.*
 
 class SettingsFragment : Fragment(), FlagPagerAdapter.OnClickListener {
@@ -40,12 +45,40 @@ class SettingsFragment : Fragment(), FlagPagerAdapter.OnClickListener {
         val btnPrev: Button = view.findViewById(R.id.arrow_left)
         val btnNext: Button = view.findViewById(R.id.arrow_right)
 
+        val time : TextView = view.findViewById(R.id.time)
         val selectedLanguage : TextView = view.findViewById(R.id.selected_language)
 
         val darkModeSelect: SwitchCompat = view.findViewById(R.id.dark_mode_select)
         val isDarkModeOn = AppCompatDelegate.getDefaultNightMode() == MODE_NIGHT_YES
         darkModeSelect.isChecked = isDarkModeOn
 
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://worldtimeapi.org/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+
+        // Appel à l'API
+        val apiService = retrofit.create(ITimezoneAPI::class.java)
+        val call = apiService.getTimezone("Europe/Paris")
+        call.enqueue(object : Callback<TimezoneResponse> {
+            override fun onResponse(call: Call<TimezoneResponse>, response: Response<TimezoneResponse>) {
+                val timezoneResponse = response.body()
+                if (timezoneResponse != null) {
+                    val datetime = timezoneResponse.datetime
+                    val inputDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS", Locale.getDefault())
+                    val outputDateFormat = SimpleDateFormat("dd-MM-yyyy : HH:mm:ss", Locale.getDefault())
+                    val inputDate = inputDateFormat.parse(datetime)
+                    val outputDate = outputDateFormat.format(inputDate!!)
+                    time.text = outputDate
+                }
+            }
+            override fun onFailure(call: Call<TimezoneResponse>, t: Throwable) {
+                // Traitement des erreurs
+            }
+        })
+
+        // Changement de page de drapeau
         viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
 
@@ -82,6 +115,7 @@ class SettingsFragment : Fragment(), FlagPagerAdapter.OnClickListener {
             btnNext.visibility = View.INVISIBLE
         }
 
+        // Set Dark Mode
         darkModeSelect.setOnCheckedChangeListener{ _, isChecked ->
             if (isChecked){
                 AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_YES)
@@ -97,16 +131,18 @@ class SettingsFragment : Fragment(), FlagPagerAdapter.OnClickListener {
         return view
     }
 
+    // Switch language onClick
     override fun onItemClick(position: Int) {
         val language = when (position) {
             0 -> "en"
             1 -> "fr"
             2 -> "it"
-            else -> "en" // fallback to English if index is out of range
+            else -> "en"
         }
         changeLanguage(language)
     }
 
+    // Definition nouveau langage
     private fun changeLanguage(language: String) {
 
         val locale = Locale(language)
