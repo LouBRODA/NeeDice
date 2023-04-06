@@ -3,6 +3,7 @@ package but.app.needice.view.fragment
 import android.animation.AnimatorInflater
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -11,6 +12,9 @@ import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.speech.RecognitionListener
+import android.speech.RecognizerIntent
+import android.speech.SpeechRecognizer
 import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.LayoutInflater
@@ -26,8 +30,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import but.app.needice.R
 import but.app.needice.adaptor.ColorPalletAdaptor
-import but.app.needice.api.FreesoundAPI
 import but.app.needice.model.Color
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
@@ -45,11 +51,31 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
     private lateinit var textZ: TextView
     private lateinit var leftDrawer: FrameLayout
     private lateinit var rightDrawer: FrameLayout
-    private var canRoll: Boolean = true             //Permet de ne pas appeler le dé à l'infini
+    private var canRoll: Boolean = true
     private lateinit var dice : ImageView
 
-    //private val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, languages.map { it.first })
-    //spinner.adapter = adapter
+    private lateinit var speechRecognizer: SpeechRecognizer
+    private val recognitionListener = object : RecognitionListener {
+        override fun onReadyForSpeech(params: Bundle?) {}
+        override fun onBeginningOfSpeech() {}
+        override fun onRmsChanged(rmsdB: Float) {}
+        override fun onBufferReceived(buffer: ByteArray?) {}
+        override fun onEndOfSpeech() {}
+        override fun onError(error: Int) {}
+        override fun onResults(results: Bundle) {
+            val matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+            if (matches != null) {
+                for (match in matches) {
+                    if (match.contains("yes")) {
+                        rollDice()
+                        break
+                    }
+                }
+            }
+        }
+        override fun onPartialResults(partialResults: Bundle?) {}
+        override fun onEvent(eventType: Int, params: Bundle?) {}
+    }
 
     @SuppressLint("CutPasteId", "ResourceAsColor")
     override fun onCreateView(
@@ -70,10 +96,22 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
 
         listen = TextToSpeech(context, this)
 
+        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(context)
+        val micro = view.findViewById<Button>(R.id.micro)
+        micro.setOnClickListener {
+            println("GOGOGOGOGO")
+            val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+            intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, requireContext().packageName)
+            speechRecognizer.startListening(intent)
+            speechRecognizer.setRecognitionListener(recognitionListener)
+        }
+
         activateDrawer(view)
         buttonColor(view)
         return view
     }
+
 
     override fun onInit(state: Int) {
         if (state == TextToSpeech.SUCCESS) {
@@ -116,69 +154,6 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
 
         val de = 1 + rd.nextInt(7 - 1)
         text?.text = de.toString()
-
-
-        // Appel de l'API Freesound.org pour récupérer un son de dé
-        val apikey = "KGAIFY355mPtfFnqxRFDRXTpxe1m0eP7EN6cVxRe"
-        val tag = "dice"
-        val soundsPerPage = 10
-        val soundType = "wav"
-        val minDuration = 0.5
-        val maxDuration = 2.0
-        val url = "https://freesound.org/apiv2/search/text/?query=629983&token=$apikey"
-
-        val client = Retrofit.Builder()
-            .baseUrl("https://freesound.org")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(FreesoundAPI::class.java)
-
-
-        val testurl = "https://freesound.org/apiv2/search/text/?query=629983&token=KGAIFY355mPtfFnqxRFDRXTpxe1m0eP7EN6cVxRe"
-        val testuri = Uri.parse(testurl)
-
-        val mediaPlayer: MediaPlayer = MediaPlayer.create(context, testuri)
-        mediaPlayer.start()
-
-        /*
-        val mediaPlayer = MediaPlayer()
-        try {
-            mediaPlayer.setDataSource(url)
-            mediaPlayer.setOnPreparedListener { mp ->
-                mp.start()
-            }
-            mediaPlayer.prepareAsync()
-        } catch (e : IOException) {
-            e.printStackTrace()
-        }
-        */
-
-        /*
-        val call: Call<FreesoundResponse> = client.getSounds(url)
-        call.enqueue(object : Callback<FreesoundResponse> {
-            override fun onResponse(call: Call<FreesoundResponse>, response: Response<FreesoundResponse>) {
-                if (response.isSuccessful && response.body() != null) {
-                    // Récupération d'un son aléatoire de la liste de résultats
-                    val sounds = response.body()?.results
-                    val randomSound = sounds?.get(rd.nextInt(sounds.size))
-                    val soundUrl = randomSound?.previews?.preview_hq_mp3 ?: ""
-
-                    // Utilisation de la bibliothèque MediaPlayer pour jouer le son de dé
-                    val soundUri = Uri.parse(soundUrl)
-                    val mp = MediaPlayer()
-                    context?.let { mp.setDataSource(it, soundUri) }
-                    mp.prepare()
-                    mp.setOnPreparedListener {
-                        mp.start()
-                    }
-                }
-            }
-
-            override fun onFailure(call: Call<FreesoundResponse>, t: Throwable) {
-                Log.e("ROLL_DICE", "ERR : Call to API Freesound.org : ${t.message}")
-            }
-        })
-        */
 
         val form: View? = view?.findViewById(R.id.dice_form)
         val animator = AnimatorInflater.loadAnimator(this.context, R.animator.dice_animator)
