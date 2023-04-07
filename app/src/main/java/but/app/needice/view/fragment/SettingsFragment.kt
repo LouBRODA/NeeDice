@@ -48,6 +48,12 @@ class SettingsFragment : Fragment(), FlagPagerAdapter.OnClickListener {
         val time : TextView = view.findViewById(R.id.time)
         val selectedLanguage : TextView = view.findViewById(R.id.selected_language)
 
+
+        val systemNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        if (systemNightMode == Configuration.UI_MODE_NIGHT_YES) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        }
+
         val darkModeSelect: SwitchCompat = view.findViewById(R.id.dark_mode_select)
         val isDarkModeOn = AppCompatDelegate.getDefaultNightMode() == MODE_NIGHT_YES
         darkModeSelect.isChecked = isDarkModeOn
