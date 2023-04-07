@@ -1,6 +1,6 @@
 package but.app.needice.view.fragment
 
-import android.Manifest.permission
+import android.Manifest.permission.RECORD_AUDIO
 import android.animation.AnimatorInflater
 import android.annotation.SuppressLint
 import android.content.Context
@@ -53,7 +53,36 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
     private val REQUEST_RECORD_AUDIO_PERMISSION = 200
 
     private var permissionToRecordAccepted = false
-    private var permissions: Array<String> = arrayOf(permission.RECORD_AUDIO)
+    private var permissions: Array<String> = arrayOf(RECORD_AUDIO)
+
+    private fun requestPermission() {
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                RECORD_AUDIO
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf(RECORD_AUDIO),
+                REQUEST_RECORD_AUDIO_PERMISSION
+            )
+        } else {
+            permissionToRecordAccepted = true
+        }
+    }
+
+    @Deprecated("Deprecated")
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == REQUEST_RECORD_AUDIO_PERMISSION) {
+            permissionToRecordAccepted =
+                grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED
+        }
+    }
 
     @SuppressLint("CutPasteId", "ResourceAsColor")
     override fun onCreateView(
@@ -73,6 +102,7 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
         dice = view.findViewById(R.id.dice_form)
 
         listen = TextToSpeech(context, this)
+        requestPermission()
 
 
         // Vérification des permissions pour enregistrer l'audio
@@ -132,14 +162,6 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
         return view
     }
 
-    @Deprecated("Deprecated")
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        when (requestCode) {
-            REQUEST_RECORD_AUDIO_PERMISSION -> {
-                permissionToRecordAccepted = grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED
-            }
-        }
-    }
 
     override fun onInit(state: Int) {
         if (state == TextToSpeech.SUCCESS) {

@@ -59,8 +59,15 @@ class SettingsFragment : Fragment(), FlagPagerAdapter.OnClickListener {
 
 
         // Appel à l'API
+
+        val timezone = when (resources.configuration.locale.language) {
+            "en" -> "Europe/London"
+            "fr" -> "Europe/Paris"
+            "it" -> "Europe/Rome"
+            else -> "Europe/London"
+        }
         val apiService = retrofit.create(ITimezoneAPI::class.java)
-        val call = apiService.getTimezone("Europe/Paris")
+        val call = apiService.getTimezone(timezone)
         call.enqueue(object : Callback<TimezoneResponse> {
             override fun onResponse(call: Call<TimezoneResponse>, response: Response<TimezoneResponse>) {
                 val timezoneResponse = response.body()
