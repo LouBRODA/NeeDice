@@ -102,8 +102,8 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
         dice = view.findViewById(R.id.dice_form)
 
         listen = TextToSpeech(context, this)
-        requestPermission()
 
+        requestPermission()
 
         // Vérification des permissions pour enregistrer l'audio
         ActivityCompat.requestPermissions(
@@ -124,7 +124,7 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
                 val matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
                 if (matches != null) {
                     for (match in matches) {
-                        if (match.contains("yes")) {
+                        if (match.contains("oui")) {
                             rollDice()
                             break
                         }

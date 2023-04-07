@@ -1,5 +1,6 @@
 package but.app.needice.view.fragment
 
+import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
@@ -24,7 +25,6 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.text.SimpleDateFormat
 import java.util.*
 
 class SettingsFragment : Fragment(), FlagPagerAdapter.OnClickListener {
@@ -59,7 +59,7 @@ class SettingsFragment : Fragment(), FlagPagerAdapter.OnClickListener {
         darkModeSelect.isChecked = isDarkModeOn
 
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://worldtimeapi.org/")
+            .baseUrl("https://timeapi.io/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -74,21 +74,23 @@ class SettingsFragment : Fragment(), FlagPagerAdapter.OnClickListener {
         }
         val apiService = retrofit.create(ITimezoneAPI::class.java)
         val call = apiService.getTimezone(timezone)
-        call.enqueue(object : Callback<TimezoneResponse> {
-            override fun onResponse(call: Call<TimezoneResponse>, response: Response<TimezoneResponse>) {
+        call?.enqueue(object : Callback<TimezoneResponse?> {
+            @SuppressLint("SetTextI18n")
+            override fun onResponse(
+                call: Call<TimezoneResponse?>,
+                response: Response<TimezoneResponse?>
+            ) {
                 val timezoneResponse = response.body()
                 if (timezoneResponse != null) {
-                    val datetime = timezoneResponse.datetime
-                    val inputDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS", Locale.getDefault())
-                    val outputDateFormat = SimpleDateFormat("dd-MM-yyyy : HH:mm:ss", Locale.getDefault())
-                    val inputDate = inputDateFormat.parse(datetime)
-                    val outputDate = outputDateFormat.format(inputDate!!)
-                    time.text = outputDate
+                    val date = timezoneResponse.date
+                    val timeO = timezoneResponse.time
+                    time.text = "$date $timeO"
                 }
             }
-            override fun onFailure(call: Call<TimezoneResponse>, t: Throwable) {
-                // Traitement des erreurs
+            override fun onFailure(call: Call<TimezoneResponse?>, t: Throwable) {
+                t.printStackTrace()
             }
+
         })
 
         // Changement de page de drapeau
