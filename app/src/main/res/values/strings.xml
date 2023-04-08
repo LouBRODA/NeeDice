@@ -6,9 +6,7 @@
     <string name="left_drawer_button">L</string>
     <string name="right_drawer_button">R</string>
     <string name="play_maj">PLAY</string>
-<<<<<<< HEAD
     <string name="selected_language">Selected Language : %s</string>
-=======
     <string name="dice_Selected">Dice Selected :</string>
     <string name="number_2">2</string>
     <string name="number_3">3</string>

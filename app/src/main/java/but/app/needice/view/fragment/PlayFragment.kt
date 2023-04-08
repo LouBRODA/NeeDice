@@ -36,8 +36,7 @@ import kotlin.random.Random
 
 @Suppress("DEPRECATION")
 class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
-
-
+    
     //---VARIABLES---//
 
     private var listen: TextToSpeech? = null
@@ -48,7 +47,6 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
     private lateinit var rightDrawer: FrameLayout
     private var canRoll: Boolean = true
     private lateinit var dice : ImageView
-<<<<<<< HEAD
 
     private lateinit var speechRecognizer: SpeechRecognizer
     private lateinit var recognitionListener: RecognitionListener
@@ -95,13 +93,9 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
         }
     }
 
-
-    //---ON CREATE VIEW---//
-=======
     private var diceValue : Int = 7
     //private val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, languages.map { it.first })
     //spinner.adapter = adapter
->>>>>>> voletDice
 
     @SuppressLint("CutPasteId", "ResourceAsColor", "SetTextI18n")
     override fun onCreateView(
@@ -116,10 +110,9 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
         initRecognitionListener()
         initSpeechRecognizer()
 
-<<<<<<< HEAD
         val micro = view.findViewById<Button>(R.id.micro)
         micro.setOnClickListener { startSpeechRecognition() }
-=======
+
         sensorManager = context?.getSystemService(Context.SENSOR_SERVICE) as SensorManager
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
 
@@ -130,7 +123,6 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
         dice = view.findViewById(R.id.dice_form)
 
         listen = TextToSpeech(context, this)
->>>>>>> voletDice
 
         activateDrawer(view)
         buttonColor(view)
@@ -150,9 +142,6 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
     //---VIEWS INIT---//
 
     private fun initViews(view: View) {
-        textX = view.findViewById(R.id.textx)
-        textY = view.findViewById(R.id.texty)
-        textZ = view.findViewById(R.id.textz)
         dice = view.findViewById(R.id.dice_form)
         listen = TextToSpeech(context, this)
     }
@@ -326,27 +315,23 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
         leftDrawer = view.findViewById(R.id.left_drawer)
         rightDrawer = view.findViewById(R.id.right_drawer)
 
-        val buttonOpen = view.findViewById<Button>(R.id.button_left)
-        buttonOpen.setOnClickListener {
-            if (rightDrawer.visibility == View.GONE) {
-                rightDrawer.visibility = View.VISIBLE
-                leftDrawer.visibility = View.GONE
-            }
+        view.findViewById<Button>(R.id.button_left)?.setOnClickListener {
+            leftDrawer.visibility = View.VISIBLE
         }
-
-        val buttonClose = view.findViewById<Button>(R.id.button_right)
-        buttonClose.setOnClickListener {
-            if (leftDrawer.visibility == View.GONE) {
-                rightDrawer.visibility = View.GONE
-                leftDrawer.visibility = View.VISIBLE
-            }
+        view.findViewById<Button>(R.id.button_left2)?.setOnClickListener {
+            leftDrawer.visibility = View.INVISIBLE
+        }
+        view.findViewById<Button>(R.id.button_right)?.setOnClickListener {
+            rightDrawer.visibility = View.VISIBLE
+        }
+        view.findViewById<Button>(R.id.button_right2)?.setOnClickListener {
+            rightDrawer.visibility = View.INVISIBLE
         }
     }
 
-<<<<<<< HEAD
 
-    //---COLORS---//
-=======
+    //---NUMBERS---//
+
     @SuppressLint("SetTextI18n")
     private fun buttonNumber(view: View){
         view.findViewById<Button>(R.id.button_2)?.setOnClickListener {
@@ -374,7 +359,8 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
             numberSelected.text = "Number Selected : 6"
         }
     }
->>>>>>> voletDice
+
+    //---COLORS---//
 
     private fun buttonColor(view: View){
         view.findViewById<Button>(R.id.button_red)?.setOnClickListener {
