@@ -7,5 +7,4 @@ class ColorPallet {
     fun addColor(color: Color) {
         listColor.add(color)
     }
-
 }

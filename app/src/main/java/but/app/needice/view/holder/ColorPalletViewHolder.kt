@@ -1,13 +1,18 @@
 package but.app.needice.view.holder
 
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
 import android.widget.CheckBox
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import but.app.needice.R
 
-class ColorPalletViewHolder(val cellule : View) : ViewHolder(cellule) {
+class ColorPalletViewHolder(cellule : View) : ViewHolder(cellule) {
+    val buttonColor : Button
     init{
-        cellule.findViewById<CheckBox>(R.id.color_checked).setOnCheckedChangeListener { _, _ -> Log.i("TEST", "CHECKED") }
+        buttonColor = cellule.findViewById(R.id.button_color)
     }
 }
