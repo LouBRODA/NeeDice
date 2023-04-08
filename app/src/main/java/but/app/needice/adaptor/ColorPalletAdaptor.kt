@@ -2,6 +2,7 @@ package but.app.needice.adaptor
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import but.app.needice.R
@@ -16,11 +17,10 @@ class ColorPalletAdaptor(private val listColor : ArrayList<Color>) : RecyclerVie
     }
 
     override fun onBindViewHolder(holder: ColorPalletViewHolder, position: Int) {
-        holder.itemView.findViewById<TextView>(R.id.text_color_name).text = String.format("%s", listColor[position].name)
+        holder.buttonColor.text = String.format("%s", listColor[position].name)
     }
 
     override fun getItemCount(): Int {
         return listColor.size
     }
-
 }
