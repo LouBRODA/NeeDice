@@ -12,12 +12,27 @@
         android:orientation="vertical"
         android:animateLayoutChanges="true">
 
-        <ImageView
-            android:id="@+id/dice_form"
-            android:layout_width="222dp"
-            android:layout_height="222dp"
-            android:layout_gravity="center_horizontal"
-            android:background="@drawable/dice_form" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Image du dé en arrière-plan -->
+            <ImageView
+                android:id="@+id/dice_form"
+                android:layout_width="222dp"
+                android:layout_height="222dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/dice_form" />
+
+            <!-- Visage de dé par-dessus -->
+            <but.app.needice.view.DiceFace
+                android:id="@+id/dice_face"
+                android:layout_width="222dp"
+                android:layout_height="222dp"
+                android:layout_gravity="center_horizontal"/>
+
+        </FrameLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"

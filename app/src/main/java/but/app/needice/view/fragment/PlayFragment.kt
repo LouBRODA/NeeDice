@@ -29,12 +29,16 @@ import androidx.recyclerview.widget.RecyclerView
 import but.app.needice.R
 import but.app.needice.adaptor.ColorPalletAdaptor
 import but.app.needice.model.Color
+import but.app.needice.view.DiceFace
 import java.util.*
 import kotlin.random.Random
 
 
 @Suppress("DEPRECATION")
 class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
+
+
+    //---VARIABLES---//
 
     private var listen: TextToSpeech? = null
     private lateinit var sensorManager: SensorManager
@@ -54,6 +58,9 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
 
     private var permissionToRecordAccepted = false
     private var permissions: Array<String> = arrayOf(RECORD_AUDIO)
+
+
+    //---MICROPHONE PERMISSION---//
 
     private fun requestPermission() {
         if (ContextCompat.checkSelfPermission(
@@ -78,11 +85,19 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == REQUEST_RECORD_AUDIO_PERMISSION) {
-            permissionToRecordAccepted =
-                grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED
+        when (requestCode) {
+            REQUEST_RECORD_AUDIO_PERMISSION -> {
+                permissionToRecordAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED
+                if (!permissionToRecordAccepted) {
+                    Toast.makeText(context, "Permission to use microphone not granted", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
         }
     }
+
+
+    //---ON CREATE VIEW---//
 
     @SuppressLint("CutPasteId", "ResourceAsColor")
     override fun onCreateView(
@@ -91,28 +106,55 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.play_screen, container, false)
+        initSensor()
+        initViews(view)
+        initPermissions()
+        initRecognitionListener()
+        initSpeechRecognizer()
 
+        val micro = view.findViewById<Button>(R.id.micro)
+        micro.setOnClickListener { startSpeechRecognition() }
+
+        activateDrawer(view)
+        buttonColor(view)
+        return view
+    }
+
+
+    //---SENSOR INIT---//
+
+    private fun initSensor() {
         sensorManager = context?.getSystemService(Context.SENSOR_SERVICE) as SensorManager
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+    }
 
+
+    //---VIEWS INIT---//
+
+    private fun initViews(view: View) {
         textX = view.findViewById(R.id.textx)
         textY = view.findViewById(R.id.texty)
         textZ = view.findViewById(R.id.textz)
-
         dice = view.findViewById(R.id.dice_form)
-
         listen = TextToSpeech(context, this)
+    }
 
+
+    //---PERMISSIONS INIT---//
+
+    private fun initPermissions() {
         requestPermission()
-
-        // Vérification des permissions pour enregistrer l'audio
         ActivityCompat.requestPermissions(
             requireActivity(),
             permissions,
             REQUEST_RECORD_AUDIO_PERMISSION
         )
+    }
 
-        // Définition du listener de reconnaissance vocale
+
+    //---SPEECH RECOGNIZER---//
+
+    private fun initRecognitionListener() {
         recognitionListener = object : RecognitionListener {
             override fun onReadyForSpeech(params: Bundle?) {}
             override fun onBeginningOfSpeech() {}
@@ -121,47 +163,53 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
             override fun onEndOfSpeech() {}
             override fun onError(error: Int) {}
             override fun onResults(results: Bundle) {
-                val matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-                if (matches != null) {
-                    for (match in matches) {
-                        if (match.contains("oui")) {
-                            rollDice()
-                            break
-                        }
-                    }
-                }
+                handleSpeechRecognitionResults(results)
             }
             override fun onPartialResults(partialResults: Bundle?) {}
             override fun onEvent(eventType: Int, params: Bundle?) {}
         }
-
-        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(context)
-
-        val micro = view.findViewById<Button>(R.id.micro)
-        micro.setOnClickListener {
-            if (permissionToRecordAccepted) {
-                val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
-                intent.putExtra(
-                    RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                    RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
-                )
-                intent.putExtra(
-                    RecognizerIntent.EXTRA_CALLING_PACKAGE,
-                    requireContext().packageName
-                )
-                speechRecognizer.startListening(intent)
-                speechRecognizer.setRecognitionListener(recognitionListener)
-            } else {
-                Toast.makeText(context, "Permission to use microphone not granted", Toast.LENGTH_SHORT)
-                    .show()
-            }
-        }
-
-        activateDrawer(view)
-        buttonColor(view)
-        return view
     }
 
+    private fun initSpeechRecognizer() {
+        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(context)
+        speechRecognizer.setRecognitionListener(recognitionListener)
+    }
+
+    private fun startSpeechRecognition() {
+        if (permissionToRecordAccepted) {
+            val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+            intent.putExtra(
+                RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+            )
+            intent.putExtra(
+                RecognizerIntent.EXTRA_CALLING_PACKAGE,
+                requireContext().packageName
+            )
+            speechRecognizer.startListening(intent)
+        } else {
+            Toast.makeText(
+                context,
+                "Permission to use microphone not granted",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    private fun handleSpeechRecognitionResults(results: Bundle) {
+        val matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+        if (matches != null) {
+            for (match in matches) {
+                if (match.contains("oui")) {
+                    rollDice()
+                    break
+                }
+            }
+        }
+    }
+
+
+    //---TEXT TO SPEECH---//
 
     override fun onInit(state: Int) {
         if (state == TextToSpeech.SUCCESS) {
@@ -179,6 +227,9 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
         listen!!.speak(text, TextToSpeech.QUEUE_FLUSH, null)
     }
 
+
+    //---ON RESUME---//
+
     override fun onResume() {
         super.onResume()
         val recyclerView = view?.findViewById<RecyclerView>(R.id.list_color_display)
@@ -193,10 +244,16 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
         //startActivityForResult(intent,0)
     }
 
+
+    //---ON STOP---//
+
     override fun onStop() {
         super.onStop()
         sensorManager.unregisterListener(accelListener)       //Add notre capteur à la liste des capteurs "mort" du sensorManager, désactive donc le capteur
     }
+
+
+    //---DICE---//
 
     private fun rollDice() {
         val text: TextView? = view?.findViewById(R.id.number)
@@ -204,6 +261,9 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
 
         val de = 1 + rd.nextInt(7 - 1)
         text?.text = de.toString()
+
+        val diceFace = view?.findViewById<DiceFace>(R.id.dice_face)
+        diceFace?.setNumDots(de)
 
         val form: View? = view?.findViewById(R.id.dice_form)
         val animator = AnimatorInflater.loadAnimator(this.context, R.animator.dice_animator)
@@ -215,6 +275,9 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
             canRoll = true
         }, 2000)
     }
+
+
+    //---ACCELEROMETER---//
 
     private fun checkValue(x: Float, y: Float, z: Float) {
         if (x >= 20.0 || x <= -20 || y >= 20 || y <= -10 || z <= -20 || z >= 20) {       //x.pow(2) --------> A regarder pour systeme plus propre //sensibilité moyenne
@@ -242,6 +305,9 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
         }
     }
 
+
+    //---LATERAL DRAWERS---//
+
     private fun activateDrawer(view: View) {
         leftDrawer = view.findViewById(R.id.left_drawer)
         rightDrawer = view.findViewById(R.id.right_drawer)
@@ -262,6 +328,9 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
             }
         }
     }
+
+
+    //---COLORS---//
 
     private fun buttonColor(view: View){
         view.findViewById<Button>(R.id.button_red)?.setOnClickListener {

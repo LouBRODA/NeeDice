@@ -2,6 +2,7 @@ package but.app.needice.view.fragment
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
@@ -29,11 +31,29 @@ import java.util.*
 
 class SettingsFragment : Fragment(), FlagPagerAdapter.OnClickListener {
 
+
+    //---ON CREATE VIEW---//
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.settings_screen, container, false)
 
-        var data = Stub().load()
+        val systemNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        if (systemNightMode == Configuration.UI_MODE_NIGHT_YES) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        }
 
+        setupViewPager(view)
+        setupButtons(view)
+        setupTimezoneAPI(view)
+        setupDarkModeSwitch(view)
+
+        return view
+    }
+
+
+    //---SETUP VIEWPAGER---//
+
+    private fun setupViewPager(view: View) {
         val viewPager: ViewPager = view.findViewById(R.id.viewPager)
         val flagIds: List<Int> =
             listOf(R.drawable.flag_england, R.drawable.flag_france, R.drawable.flag_italy)
@@ -42,29 +62,67 @@ class SettingsFragment : Fragment(), FlagPagerAdapter.OnClickListener {
 
         flagPagerAdapter.setOnClickListener(this)
 
+        viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
+
+            override fun onPageSelected(position: Int) {
+                val btnPrev: Button = view.findViewById(R.id.arrow_left)
+                val btnNext: Button = view.findViewById(R.id.arrow_right)
+
+                if (position == 0) {
+                    btnPrev.visibility = View.INVISIBLE
+                } else {
+                    btnPrev.visibility = View.VISIBLE
+                }
+
+                if (position == flagPagerAdapter.count - 1) {
+                    btnNext.visibility = View.INVISIBLE
+                } else {
+                    btnNext.visibility = View.VISIBLE
+                }
+            }
+
+            override fun onPageScrollStateChanged(state: Int) {}
+        })
+
         val btnPrev: Button = view.findViewById(R.id.arrow_left)
         val btnNext: Button = view.findViewById(R.id.arrow_right)
 
-        val time : TextView = view.findViewById(R.id.time)
-        val selectedLanguage : TextView = view.findViewById(R.id.selected_language)
+        // initial button state
+        btnPrev.visibility = View.INVISIBLE
+        if (flagPagerAdapter.count > 1) {
+            btnNext.visibility = View.VISIBLE
+        } else {
+            btnNext.visibility = View.INVISIBLE
+        }
+    }
 
 
-        val systemNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-        if (systemNightMode == Configuration.UI_MODE_NIGHT_YES) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+    //---SETUP BUTTONS---//
+
+    private fun setupButtons(view: View) {
+        val btnPrev: Button = view.findViewById(R.id.arrow_left)
+        val btnNext: Button = view.findViewById(R.id.arrow_right)
+
+        btnPrev.setOnClickListener {
+            val viewPager: ViewPager = view.findViewById(R.id.viewPager)
+            viewPager.currentItem -= 1
         }
 
-        val darkModeSelect: SwitchCompat = view.findViewById(R.id.dark_mode_select)
-        val isDarkModeOn = AppCompatDelegate.getDefaultNightMode() == MODE_NIGHT_YES
-        darkModeSelect.isChecked = isDarkModeOn
+        btnNext.setOnClickListener {
+            val viewPager: ViewPager = view.findViewById(R.id.viewPager)
+            viewPager.currentItem += 1
+        }
+    }
 
+
+    //---SETUP API---//
+
+    private fun setupTimezoneAPI(view: View) {
         val retrofit = Retrofit.Builder()
             .baseUrl("https://timeapi.io/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-
-
-        // Appel à l'API
 
         val timezone = when (resources.configuration.locale.language) {
             "en" -> "Europe/London"
@@ -82,6 +140,7 @@ class SettingsFragment : Fragment(), FlagPagerAdapter.OnClickListener {
             ) {
                 val timezoneResponse = response.body()
                 if (timezoneResponse != null) {
+                    val time : TextView = view.findViewById(R.id.time)
                     val date = timezoneResponse.date
                     val timeO = timezoneResponse.time
                     time.text = "$date $timeO"
@@ -90,63 +149,31 @@ class SettingsFragment : Fragment(), FlagPagerAdapter.OnClickListener {
             override fun onFailure(call: Call<TimezoneResponse?>, t: Throwable) {
                 t.printStackTrace()
             }
-
         })
-
-        // Changement de page de drapeau
-        viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
-
-            override fun onPageSelected(position: Int) {
-                if (position == 0) {
-                    btnPrev.visibility = View.INVISIBLE
-                } else {
-                    btnPrev.visibility = View.VISIBLE
-                }
-
-                if (position == flagPagerAdapter.count - 1) {
-                    btnNext.visibility = View.INVISIBLE
-                } else {
-                    btnNext.visibility = View.VISIBLE
-                }
-            }
-
-            override fun onPageScrollStateChanged(state: Int) {}
-        })
-
-        btnPrev.setOnClickListener {
-            viewPager.currentItem -= 1
-        }
-
-        btnNext.setOnClickListener {
-            viewPager.currentItem += 1
-        }
-
-        // initial button state
-        btnPrev.visibility = View.INVISIBLE
-        if (flagPagerAdapter.count > 1) {
-            btnNext.visibility = View.VISIBLE
-        } else {
-            btnNext.visibility = View.INVISIBLE
-        }
-
-        // Set Dark Mode
-        darkModeSelect.setOnCheckedChangeListener{ _, isChecked ->
-            if (isChecked){
-                AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_YES)
-            }else{
-                AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_NO)
-            }
-        }
-
-        val currentLanguage = resources.configuration.locale.language
-        val newText = getString(R.string.selected_language, currentLanguage)
-        selectedLanguage.text = newText
-
-        return view
     }
 
-    // Switch language onClick
+
+    //---SETUP DARK MODE---//
+
+    private fun setupDarkModeSwitch(view: View) {
+        val darkModeSwitch: SwitchCompat = view.findViewById(R.id.dark_mode_select)
+
+        // Get the current night mode state from preferences and set the switch accordingly
+        val nightMode = AppCompatDelegate.getDefaultNightMode()
+        darkModeSwitch.isChecked = nightMode == AppCompatDelegate.MODE_NIGHT_YES
+
+        darkModeSwitch.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            }
+        }
+    }
+
+
+    //---ON FLAG CLICK---//
+
     override fun onItemClick(position: Int) {
         val language = when (position) {
             0 -> "en"
@@ -157,7 +184,9 @@ class SettingsFragment : Fragment(), FlagPagerAdapter.OnClickListener {
         changeLanguage(language)
     }
 
-    // Definition nouveau langage
+
+    //---CHANGE LANGUAGE---//
+
     private fun changeLanguage(language: String) {
 
         val locale = Locale(language)
