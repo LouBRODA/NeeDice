@@ -17,12 +17,7 @@ Sommaire
 
 *******
 
-<div id='acces'/>
-
-### Profiter dès maintenant d'un accès anticipé à SpellTastic
-
-Disponible sur :  
-![](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)   
+<div id='acces'/> 
 
 Pour accéder au code de notre application, vous pouvez cloner la branche `master` de notre dépôt Code#0 et ouvrir celle-ci dans `Android Studio` par exemple.   
 
