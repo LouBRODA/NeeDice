@@ -184,6 +184,7 @@ class PlayFragment : Fragment(), TextToSpeech.OnInitListener {
 
     private fun startSpeechRecognition() {
         if (permissionToRecordAccepted) {
+            Toast.makeText(context, "Say <Oui> to roll the dice", Toast.LENGTH_SHORT).show() // ajout de la ligne pour afficher le toast
             val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
             intent.putExtra(
                 RecognizerIntent.EXTRA_LANGUAGE_MODEL,
