@@ -13,8 +13,7 @@ Sommaire
  3. [Présentation du projet](#presentation)
  4. [Contenu](#contenu)
  5. [Contraintes](#contraintes)
- 6. [Conception](#conception)
- 7. [Auteurs](#auteurs)
+ 6. [Auteurs](#auteurs)
 
 *******
 
@@ -25,6 +24,8 @@ Sommaire
 Disponible sur :  
 ![](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)   
 
+Pour accéder au code de notre application, vous pouvez cloner la branche `master` de notre dépôt Code#0 et ouvrir celle-ci dans `Android Studio` par exemple.   
+
 > **Warning**: Le déploiement n'a pas encore été fait. 
 
 *******
@@ -32,7 +33,7 @@ Disponible sur :
 
 🚧  __EN PROGRESSION__
 
-📆  _Fin du projet prévue :_ 03 Avril 2023
+📆  _Fin du projet prévue :_ 09 Avril 2023
 
 Retrouver notre avancée journalière dans la partie `wiki` de notre dépôt.   
 
@@ -81,7 +82,11 @@ Lancer de dé fait par le mouvement de votre téléphone.
 
 - Personnalisation de la couleur et du nombre de faces de dé.   
 - Lancement de dé fait avec l'accéléromètre.   
+- Lancement de dé avec la voix   
 - Annonce du résultat par la sortie audio du smartphone.  
+- Mode sombre pour l'application
+- Dessin sur la face du dé avec une animation d'entrée
+- Plusieurs langues disponibles dans l'application
 
 - D'autres fonctionnalités supplémentaires sont aussi envisagées...
 
@@ -90,7 +95,7 @@ Lancer de dé fait par le mouvement de votre téléphone.
 ## Ressources
 
 - Temps
-    - 27 Février au 31 Mars    
+    - 27 Février au 09 Avril    
 - Matériel
     - Ordinateurs portables sous Linux ou Windows   
     - Android Studio    
@@ -99,13 +104,6 @@ Lancer de dé fait par le mouvement de votre téléphone.
 - Personnes 
     - 2 étudiants en BUT Informatique
 
-*******
-
-<div id='conception'/>
-
-## Détails de conception
-
-> **Warning**: Pas encore disponibles.
 
 *******
 
