@@ -1,19 +1,18 @@
 package but.app.needice.view.fragment
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.res.Configuration
-import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import androidx.annotation.RequiresApi
+import androidx.annotation.Nullable
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
-import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
 import androidx.appcompat.widget.SwitchCompat
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
@@ -21,7 +20,6 @@ import but.app.needice.R
 import but.app.needice.adaptor.FlagPagerAdapter
 import but.app.needice.api.ITimezoneAPI
 import but.app.needice.api.TimezoneResponse
-import but.app.needice.data.Stub
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -30,7 +28,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
 
 class SettingsFragment : Fragment(), FlagPagerAdapter.OnClickListener {
-
 
     //---ON CREATE VIEW---//
 
@@ -175,7 +172,7 @@ class SettingsFragment : Fragment(), FlagPagerAdapter.OnClickListener {
     //---ON FLAG CLICK---//
 
     override fun onItemClick(position: Int) {
-        val language = when (position) {
+        val language: String = when (position) {
             0 -> "en"
             1 -> "fr"
             2 -> "it"
@@ -183,6 +180,7 @@ class SettingsFragment : Fragment(), FlagPagerAdapter.OnClickListener {
         }
         changeLanguage(language)
     }
+
 
 
     //---CHANGE LANGUAGE---//
@@ -197,5 +195,12 @@ class SettingsFragment : Fragment(), FlagPagerAdapter.OnClickListener {
         config.locale = locale
         requireActivity().resources.updateConfiguration(config, requireActivity().resources.displayMetrics)
         requireActivity().recreate()
+
+        val sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE)
+        with(sharedPref.edit()) {
+            putString("selected_language", language)
+            apply()
+        }
     }
+
 }
